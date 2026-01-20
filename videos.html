@@ -180,10 +180,15 @@
             line-height: 1.4;
         }
 
+        .video-date {
+            color: #999999;
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
         .video-actions {
             display: flex;
             gap: 0.5rem;
-            margin-top: 0.75rem;
         }
 
         .btn-small {
@@ -358,84 +363,69 @@
     </footer>
 
     <script>
-        const CHANNEL_ID = 'UCawesomegavg'; // This will be fetched dynamically
         const CHANNEL_HANDLE = 'awesomegavg';
+        const CHANNEL_ID = 'UC7UHCo3gVT6CzpaYcDJfWVw';
 
         async function loadVideos() {
             const videoGrid = document.getElementById('videoGrid');
             const loading = document.getElementById('loading');
 
             try {
-                // Fetch channel's RSS feed
+                // Use RSS2JSON API to fetch the channel's RSS feed
                 const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+                const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
                 
-                // Use a CORS proxy to fetch the RSS feed
-                const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(rssUrl)}`);
-                const text = await response.text();
+                const response = await fetch(apiUrl);
+                const data = await response.json();
                 
-                // Parse XML
-                const parser = new DOMParser();
-                const xml = parser.parseFromString(text, 'text/xml');
-                const entries = xml.querySelectorAll('entry');
-
-                if (entries.length === 0) {
-                    // Fallback: Try fetching by handle
-                    const handleRssUrl = `https://www.youtube.com/feeds/videos.xml?user=${CHANNEL_HANDLE}`;
-                    const handleResponse = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(handleRssUrl)}`);
-                    const handleText = await handleResponse.text();
-                    const handleXml = parser.parseFromString(handleText, 'text/xml');
-                    const handleEntries = handleXml.querySelectorAll('entry');
-                    
-                    if (handleEntries.length > 0) {
-                        displayVideos(handleEntries, videoGrid, loading);
-                        return;
-                    }
+                loading.style.display = 'none';
+                
+                if (data.status !== 'ok' || !data.items || data.items.length === 0) {
+                    throw new Error('No videos found');
                 }
-
-                displayVideos(entries, videoGrid, loading);
-
+                
+                // Display videos
+                data.items.forEach(item => {
+                    // Extract video ID from the link
+                    const videoId = item.link.split('v=')[1]?.split('&')[0];
+                    const title = item.title;
+                    const pubDate = new Date(item.pubDate);
+                    const thumbnail = `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
+                    
+                    if (!videoId) return;
+                    
+                    const dateStr = pubDate.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    });
+                    
+                    const card = document.createElement('div');
+                    card.className = 'video-card';
+                    card.innerHTML = `
+                        <div class="video-thumbnail" onclick="openModal('${videoId}')">
+                            <img src="${thumbnail}" alt="${title}">
+                            <div class="play-overlay"></div>
+                        </div>
+                        <div class="video-info">
+                            <h3>${title}</h3>
+                            <div class="video-date">${dateStr}</div>
+                            <div class="video-actions">
+                                <button class="btn-small btn-watch" onclick="openModal('${videoId}')">Watch Here</button>
+                                <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="btn-small btn-youtube">YouTube</a>
+                            </div>
+                        </div>
+                    `;
+                    videoGrid.appendChild(card);
+                });
+                
             } catch (err) {
                 console.error('Error loading videos:', err);
                 loading.innerHTML = `
-                    <p>Unable to load videos automatically.</p>
+                    <p>Unable to load videos automatically</p>
                     <p style="margin-top: 1rem;"><a href="https://www.youtube.com/@${CHANNEL_HANDLE}" target="_blank" style="color: #333333; font-weight: 600;">Visit my YouTube channel</a></p>
                 `;
             }
-        }
-
-        function displayVideos(entries, videoGrid, loading) {
-            loading.style.display = 'none';
-
-            if (entries.length === 0) {
-                videoGrid.innerHTML = '<p style="text-align: center; color: #666666;">No videos found.</p>';
-                return;
-            }
-
-            entries.forEach(entry => {
-                const videoId = entry.querySelector('videoId')?.textContent || 
-                               entry.querySelector('id')?.textContent?.split(':').pop();
-                const title = entry.querySelector('title')?.textContent;
-                const thumbnail = `https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`;
-
-                if (!videoId) return;
-
-                const card = document.createElement('div');
-                card.className = 'video-card';
-                card.innerHTML = `
-                    <div class="video-thumbnail" onclick="openModal('${videoId}')">
-                        <img src="${thumbnail}" alt="${title}">
-                        <div class="play-overlay"></div>
-                    </div>
-                    <div class="video-info">
-                        <h3>${title}</h3>
-                        <div class="video-actions">
-                            <button class="btn-small btn-watch" onclick="openModal('${videoId}')">Watch Here</button>
-                            <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="btn-small btn-youtube">YouTube</a>
-                        </div>
-                    </div>
-                `;
-                videoGrid.appendChild(card);
-            });
         }
 
         function openModal(videoId) {
@@ -466,6 +456,7 @@
             }
         });
 
+        // Load videos on page load
         loadVideos();
     </script>
 </body>
