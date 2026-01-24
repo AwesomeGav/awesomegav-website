@@ -37,7 +37,6 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            transition: all 0.3s ease;
         }
 
         nav {
@@ -51,11 +50,6 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
         }
 
         .logo img {
@@ -70,7 +64,6 @@
         .logo-text {
             font-size: 2rem;
             font-weight: 800;
-            color: #333333;
         }
 
         .nav-links {
@@ -83,7 +76,6 @@
             text-decoration: none;
             color: #333333;
             font-weight: 500;
-            transition: color 0.3s ease;
             position: relative;
         }
 
@@ -106,46 +98,20 @@
         .hero {
             padding: 8rem 0 6rem;
             text-align: center;
-            animation: fadeIn 1s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .hero h1 {
             font-size: 4rem;
             margin-bottom: 1rem;
-            color: #333333;
-            animation: slideDown 0.8s ease;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .hero p {
             font-size: 1.5rem;
             color: #666666;
             margin-bottom: 2.5rem;
-            animation: fadeIn 1.2s ease;
         }
 
-        /* Pill Buttons */
+        /* Buttons */
         .btn {
             display: inline-block;
             padding: 1rem 2.5rem;
@@ -153,65 +119,40 @@
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
             font-size: 1.1rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.3);
-            transition: left 0.5s ease;
-        }
-
-        .btn:hover::before {
-            left: 100%;
         }
 
         .btn-primary {
             background: #e0e0e0;
             color: #333333;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-right: 1rem;
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
             background: #d0d0d0;
+            transform: translateY(-3px);
         }
 
         .btn-secondary {
             background: white;
             color: #333333;
             border: 2px solid #e0e0e0;
-            margin-left: 1rem;
         }
 
         .btn-secondary:hover {
             background: #f5f5f5;
-            color: #333333;
             transform: translateY(-3px);
-            border-color: #d0d0d0;
         }
 
         /* Features Section */
         .features {
             padding: 6rem 0;
-            background: white;
         }
 
         .section-title {
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 4rem;
-            color: #333333;
         }
 
         .features-grid {
@@ -226,7 +167,6 @@
             border-radius: 20px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
-            border: 1px solid #f0f0f0;
         }
 
         .feature-card:hover {
@@ -239,70 +179,8 @@
             margin-bottom: 1.5rem;
         }
 
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #333333;
-        }
-
-        .feature-card p {
-            color: #666666;
-        }
-
-        /* Video Section */
-        .videos {
-            padding: 6rem 0;
-            background: #fafafa;
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .video-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .video-card:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
-        }
-
-        .video-thumbnail {
-            width: 100%;
-            height: 200px;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: #666666;
-        }
-
-        .video-info {
-            padding: 1.5rem;
-        }
-
-        .video-info h3 {
-            margin-bottom: 0.5rem;
-            color: #333333;
-        }
-
-        .video-info p {
-            color: #666666;
-            font-size: 0.9rem;
-        }
-
-        /* Footer */
         footer {
             background: #f5f5f5;
-            color: #333333;
             padding: 3rem 0;
             text-align: center;
         }
@@ -322,110 +200,77 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 1.5rem;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-decoration: none;
-            color: #333333;
-        }
-
-        .social-btn svg {
-            width: 28px;
-            height: 28px;
-            fill: #333333;
-        }
-
-        .social-btn img {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
-        }
-
-        .social-btn:hover {
-            background: #e0e0e0;
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            .btn-secondary {
-                margin-left: 0;
-                margin-top: 1rem;
-            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <nav class="container">
-            <div class="logo">
-                <img src="logo.jpg" alt="AwesomeGav Logo" onerror="this.style.display='none'">
-                <span class="logo-text">AwesomeGav</span>
-            </div>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="videos.html">Videos</a></li>
-                <li><a href="games.html">Games</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <section id="home" class="hero">
-        <div class="container">
-            <h1>Welcome to AwesomeGav</h1>
-            <p>Level Up Your Gaming Experience</p>
-            <a href="https://www.youtube.com/@awesomegavg?sub_confirmation=1" class="btn btn-primary">Subscribe Now</a>
-            <a href="videos.html" class="btn btn-secondary">Watch Videos</a>
+<header>
+    <nav class="container">
+        <div class="logo">
+            <img src="logo.jpg" alt="AwesomeGav Logo">
+            <span class="logo-text">AwesomeGav</span>
         </div>
-    </section>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="videos.html">Videos</a></li>
+            <li><a href="games.html">Games</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <section id="about" class="features">
-        <div class="container">
-            <h2 class="section-title">What You'll Find Here</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🎮</div>
-                    <h3>Epic Gameplay</h3>
-                    <p>Watch the latest gameplay from trending and classic games with pro-level commentary.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏆</div>
-                    <h3>Tips & Tricks</h3>
-                    <p>Level up your skills with expert guides, strategies, and gaming tutorials.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎬</div>
-                    <h3>Live Streams</h3>
-                    <p>Join live gaming sessions and interact with the community in real-time.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- HERO -->
+<section id="home" class="hero">
+    <div class="container">
+        <h1>Welcome to AwesomeGav</h1>
+        <p>Gaming Videos, Highlights, and Tutorials 🎮</p>
+        <a href="https://www.youtube.com/@awesomegavg?sub_confirmation=1" class="btn btn-primary">Subscribe Now</a>
+        <a href="videos.html" class="btn btn-secondary">Watch Videos</a>
+    </div>
+</section>
 
-    <footer id="contact">
-        <div class="container">
-            <div class="social-links">
-                <a href="https://www.youtube.com/@awesomegavg?sub_confirmation=1" class="social-btn" aria-label="YouTube">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                    </svg>
-                </a>
-                <a href="https://medal.tv/users/awesomegav" class="social-btn" aria-label="Medal">
-                    <img src="medal.png" alt="Medal" onerror="this.parentElement.style.display='none'">
-                </a>
+<!-- FEATURES -->
+<section id="about" class="features">
+    <div class="container">
+        <h2 class="section-title">What You'll Find Here</h2>
+        <div class="features-grid">
+
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <h3>Gaming Videos</h3>
+                <p>Full gameplay videos from Roblox, BeamNG, MSFS 2024, VR games, and more.</p>
             </div>
-            <p>&copy; 2026 AwesomeGav Gaming Channel. All rights reserved.</p>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔥</div>
+                <h3>Highlights & Funny Moments</h3>
+                <p>The best moments, crashes, wins, fails, and funniest clips all in one place.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🛠️</div>
+                <h3>Tutorials & Guides</h3>
+                <p>Helpful tutorials, tips, and tricks to help you get better at your favorite games.</p>
+            </div>
+
         </div>
-    </footer>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+    <div class="container">
+        <div class="social-links">
+            <a href="https://www.youtube.com/@awesomegavg?sub_confirmation=1" class="social-btn">▶</a>
+            <a href="https://medal.tv/users/awesomegav" class="social-btn">🏅</a>
+        </div>
+        <p>&copy; 2026 AwesomeGav Gaming Channel. All rights reserved.</p>
+    </div>
+</footer>
+
 </body>
 </html>
