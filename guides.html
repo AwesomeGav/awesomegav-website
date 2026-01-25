@@ -559,12 +559,12 @@
                 const editBtn = document.createElement('button');
                 editBtn.className = 'btn btn-secondary';
                 editBtn.textContent = 'Edit';
-                editBtn.onclick = () => editGuide(id);
+                editBtn.addEventListener('click', () => editGuide(id));
                 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'btn btn-danger';
                 deleteBtn.textContent = 'Delete';
-                deleteBtn.onclick = () => deleteGuide(id);
+                deleteBtn.addEventListener('click', () => deleteGuide(id));
                 
                 actions.appendChild(editBtn);
                 actions.appendChild(deleteBtn);

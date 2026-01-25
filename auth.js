@@ -25,21 +25,26 @@ function updateUIForAuth(user) {
     
     if (!authButton) return;
     
+    // Remove any existing event listeners by cloning the button
+    const newAuthButton = authButton.cloneNode(true);
+    authButton.parentNode.replaceChild(newAuthButton, authButton);
+    const authBtn = document.getElementById('auth-button');
+    
     if (user) {
         // User is signed in
-        authButton.innerHTML = `
+        authBtn.innerHTML = `
             <img src="${user.photoURL || 'logo.jpg'}" alt="Profile" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 8px;">
             <span>${user.displayName || user.email}</span>
         `;
-        authButton.onclick = signOut;
+        authBtn.addEventListener('click', signOut);
         
         if (userInfo) {
             userInfo.textContent = `Signed in as: ${user.email}`;
         }
     } else {
         // User is signed out
-        authButton.innerHTML = '🔐 Sign In';
-        authButton.onclick = signIn;
+        authBtn.innerHTML = '🔐 Sign In';
+        authBtn.addEventListener('click', signIn);
         
         if (userInfo) {
             userInfo.textContent = '';
