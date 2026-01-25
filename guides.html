@@ -440,26 +440,44 @@
     <script>
         let db = null;
         let currentEditingId = null;
+        let useLocalStorage = false;
+        let firebaseInitialized = false;
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
+        // Try to initialize Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            firebaseInitialized = true;
+            
+            // Initialize auth
+            initAuth();
 
-        // Initialize auth
-        initAuth();
-
-        // Listen for auth state changes to show/hide admin controls
-        firebase.auth().onAuthStateChanged((user) => {
+            // Listen for auth state changes to show/hide admin controls
+            firebase.auth().onAuthStateChanged((user) => {
+                const adminControls = document.getElementById('admin-controls');
+                if (user && user.email === ADMIN_EMAIL) {
+                    adminControls.classList.add('visible');
+                } else {
+                    adminControls.classList.remove('visible');
+                }
+                loadGuides();
+            });
+        } catch (error) {
+            console.warn('Firebase not configured, using localStorage fallback:', error);
+            useLocalStorage = true;
+            
+            // Show admin controls in demo mode
             const adminControls = document.getElementById('admin-controls');
-            if (user && user.email === ADMIN_EMAIL) {
-                adminControls.classList.add('visible');
-            } else {
-                adminControls.classList.remove('visible');
-            }
+            adminControls.classList.add('visible');
+            
+            // Add demo mode notice
+            const hero = document.querySelector('.hero p');
+            hero.innerHTML = 'Tips, tricks, and tutorials from AwesomeGav<br><small style="color: #ff9800;">(Demo Mode - Using localStorage. See FIREBASE_SETUP.md to configure Firebase)</small>';
+            
             loadGuides();
-        });
+        }
 
-        // Load guides from Firestore
+        // Load guides from Firestore or localStorage
         async function loadGuides() {
             const loading = document.getElementById('loading');
             const guidesGrid = document.getElementById('guides-grid');
@@ -470,22 +488,40 @@
             emptyState.style.display = 'none';
 
             try {
-                const snapshot = await db.collection('guides')
-                    .orderBy('createdAt', 'desc')
-                    .get();
+                if (useLocalStorage) {
+                    // Load from localStorage
+                    const guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    loading.style.display = 'none';
+                    
+                    if (guides.length === 0) {
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+                    
+                    guides.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    guides.forEach((guide) => {
+                        const card = createGuideCard(guide.id, guide);
+                        guidesGrid.appendChild(card);
+                    });
+                } else {
+                    // Load from Firestore
+                    const snapshot = await db.collection('guides')
+                        .orderBy('createdAt', 'desc')
+                        .get();
 
-                loading.style.display = 'none';
+                    loading.style.display = 'none';
 
-                if (snapshot.empty) {
-                    emptyState.style.display = 'block';
-                    return;
+                    if (snapshot.empty) {
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+
+                    snapshot.forEach((doc) => {
+                        const guide = doc.data();
+                        const card = createGuideCard(doc.id, guide);
+                        guidesGrid.appendChild(card);
+                    });
                 }
-
-                snapshot.forEach((doc) => {
-                    const guide = doc.data();
-                    const card = createGuideCard(doc.id, guide);
-                    guidesGrid.appendChild(card);
-                });
             } catch (error) {
                 console.error('Error loading guides:', error);
                 loading.innerHTML = 'Failed to load guides. Please try again later.';
@@ -497,7 +533,12 @@
             const card = document.createElement('div');
             card.className = 'guide-card';
             
-            const date = guide.createdAt ? new Date(guide.createdAt.toDate()).toLocaleDateString() : 'Unknown date';
+            let date;
+            if (useLocalStorage) {
+                date = new Date(guide.createdAt).toLocaleDateString();
+            } else {
+                date = guide.createdAt ? new Date(guide.createdAt.toDate()).toLocaleDateString() : 'Unknown date';
+            }
             
             card.innerHTML = `
                 <h3>${escapeHtml(guide.title)}</h3>
@@ -506,8 +547,8 @@
                 <div class="content">${escapeHtml(guide.content)}</div>
             `;
 
-            // Add admin actions if user is admin
-            if (isAdmin()) {
+            // Add admin actions if user is admin (or in demo mode)
+            if (useLocalStorage || isAdmin()) {
                 const actions = document.createElement('div');
                 actions.className = 'guide-actions';
                 actions.innerHTML = `
@@ -522,7 +563,7 @@
 
         // Open create modal
         function openCreateModal() {
-            if (!isAdmin()) {
+            if (!useLocalStorage && !isAdmin()) {
                 alert('Only admins can create guides');
                 return;
             }
@@ -536,24 +577,39 @@
 
         // Edit guide
         async function editGuide(id) {
-            if (!isAdmin()) {
+            if (!useLocalStorage && !isAdmin()) {
                 alert('Only admins can edit guides');
                 return;
             }
 
             try {
-                const doc = await db.collection('guides').doc(id).get();
-                if (!doc.exists) {
-                    alert('Guide not found');
-                    return;
-                }
+                if (useLocalStorage) {
+                    const guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    const guide = guides.find(g => g.id === id);
+                    if (!guide) {
+                        alert('Guide not found');
+                        return;
+                    }
+                    
+                    currentEditingId = id;
+                    document.getElementById('modal-title').textContent = 'Edit Guide';
+                    document.getElementById('guide-title').value = guide.title;
+                    document.getElementById('guide-content').value = guide.content;
+                    document.getElementById('guide-modal').classList.add('active');
+                } else {
+                    const doc = await db.collection('guides').doc(id).get();
+                    if (!doc.exists) {
+                        alert('Guide not found');
+                        return;
+                    }
 
-                const guide = doc.data();
-                currentEditingId = id;
-                document.getElementById('modal-title').textContent = 'Edit Guide';
-                document.getElementById('guide-title').value = guide.title;
-                document.getElementById('guide-content').value = guide.content;
-                document.getElementById('guide-modal').classList.add('active');
+                    const guide = doc.data();
+                    currentEditingId = id;
+                    document.getElementById('modal-title').textContent = 'Edit Guide';
+                    document.getElementById('guide-title').value = guide.title;
+                    document.getElementById('guide-content').value = guide.content;
+                    document.getElementById('guide-modal').classList.add('active');
+                }
             } catch (error) {
                 console.error('Error loading guide:', error);
                 alert('Failed to load guide');
@@ -562,7 +618,7 @@
 
         // Delete guide
         async function deleteGuide(id) {
-            if (!isAdmin()) {
+            if (!useLocalStorage && !isAdmin()) {
                 alert('Only admins can delete guides');
                 return;
             }
@@ -572,8 +628,15 @@
             }
 
             try {
-                await db.collection('guides').doc(id).delete();
-                loadGuides();
+                if (useLocalStorage) {
+                    let guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    guides = guides.filter(g => g.id !== id);
+                    localStorage.setItem('guides', JSON.stringify(guides));
+                    loadGuides();
+                } else {
+                    await db.collection('guides').doc(id).delete();
+                    loadGuides();
+                }
             } catch (error) {
                 console.error('Error deleting guide:', error);
                 alert('Failed to delete guide');
@@ -590,14 +653,8 @@
         document.getElementById('guide-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            if (!isAdmin()) {
+            if (!useLocalStorage && !isAdmin()) {
                 alert('Only admins can create/edit guides');
-                return;
-            }
-
-            const user = getCurrentUser();
-            if (!user) {
-                alert('Please sign in first');
                 return;
             }
 
@@ -609,22 +666,61 @@
                 return;
             }
 
-            const guideData = {
-                title,
-                content,
-                authorEmail: user.email,
-                authorName: user.displayName || user.email,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
             try {
-                if (currentEditingId) {
-                    // Update existing guide
-                    await db.collection('guides').doc(currentEditingId).update(guideData);
+                if (useLocalStorage) {
+                    // Use localStorage
+                    let guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    
+                    if (currentEditingId) {
+                        // Update existing guide
+                        const index = guides.findIndex(g => g.id === currentEditingId);
+                        if (index !== -1) {
+                            guides[index] = {
+                                ...guides[index],
+                                title,
+                                content,
+                                updatedAt: new Date().toISOString()
+                            };
+                        }
+                    } else {
+                        // Create new guide
+                        const newGuide = {
+                            id: 'guide_' + Date.now(),
+                            title,
+                            content,
+                            authorEmail: 'demo@example.com',
+                            authorName: 'Demo User',
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        };
+                        guides.push(newGuide);
+                    }
+                    
+                    localStorage.setItem('guides', JSON.stringify(guides));
                 } else {
-                    // Create new guide
-                    guideData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection('guides').add(guideData);
+                    // Use Firestore
+                    const user = getCurrentUser();
+                    if (!user) {
+                        alert('Please sign in first');
+                        return;
+                    }
+
+                    const guideData = {
+                        title,
+                        content,
+                        authorEmail: user.email,
+                        authorName: user.displayName || user.email,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (currentEditingId) {
+                        // Update existing guide
+                        await db.collection('guides').doc(currentEditingId).update(guideData);
+                    } else {
+                        // Create new guide
+                        guideData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('guides').add(guideData);
+                    }
                 }
 
                 closeModal();
