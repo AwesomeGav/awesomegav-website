@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guides - AwesomeGav Gaming Channel</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header/Navigation */
+        header {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #333333;
+            padding: 5px;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #333333;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e0e0e0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        #auth-button {
+            background: #e0e0e0;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #333333;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        #auth-button:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #333333;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #666666;
+            margin-bottom: 2rem;
+        }
+
+        #user-info {
+            font-size: 0.95rem;
+            color: #999;
+        }
+
+        /* Admin Controls */
+        .admin-controls {
+            display: none;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f8f8;
+            border-radius: 12px;
+        }
+
+        .admin-controls.visible {
+            display: block;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #e0e0e0;
+            color: #333333;
+        }
+
+        .btn-primary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #ff5555;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff3333;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #333333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        /* Guides Grid */
+        .guides-section {
+            padding: 3rem 0 6rem;
+        }
+
+        .guides-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .guide-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .guide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .guide-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #333333;
+        }
+
+        .guide-card .author {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 1rem;
+        }
+
+        .guide-card .content {
+            color: #666666;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .guide-card .date {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 1rem;
+        }
+
+        .guide-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .guide-actions button {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal h2 {
+            margin-bottom: 1.5rem;
+            color: #333333;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        footer {
+            background: #f5f5f5;
+            color: #333333;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .guides-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <img src="logo.jpg" alt="AwesomeGav Logo" onerror="this.style.display='none'">
+                <span class="logo-text">AwesomeGav</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="videos.html">Videos</a></li>
+                <li><a href="games.html">Games</a></li>
+                <li><a href="guides.html">Guides</a></li>
+                <li><button id="auth-button">🔐 Sign In</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Gaming Guides</h1>
+            <p>Tips, tricks, and tutorials from AwesomeGav</p>
+            <div id="user-info"></div>
+        </div>
+    </section>
+
+    <section class="guides-section">
+        <div class="container">
+            <div id="admin-controls" class="admin-controls">
+                <button id="create-guide-btn" class="btn btn-primary">✍️ Create New Guide</button>
+            </div>
+
+            <div id="loading" class="loading">Loading guides...</div>
+            <div id="guides-grid" class="guides-grid"></div>
+            <div id="empty-state" class="empty-state" style="display: none;">
+                <h3>No guides yet</h3>
+                <p>Check back later for gaming guides and tutorials!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Create/Edit Modal -->
+    <div id="guide-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Create New Guide</h2>
+            <form id="guide-form">
+                <div class="form-group">
+                    <label for="guide-title">Title *</label>
+                    <input type="text" id="guide-title" required placeholder="Enter guide title">
+                </div>
+                <div class="form-group">
+                    <label for="guide-content">Content *</label>
+                    <textarea id="guide-content" required placeholder="Write your guide content here..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Guide</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AwesomeGav Gaming Channel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        let db = null;
+        let currentEditingId = null;
+        let useLocalStorage = false;
+        let firebaseInitialized = false;
+
+        // Try to initialize Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            firebaseInitialized = true;
+            
+            // Initialize auth
+            initAuth();
+
+            // Listen for auth state changes to show/hide admin controls
+            firebase.auth().onAuthStateChanged((user) => {
+                const adminControls = document.getElementById('admin-controls');
+                if (user && user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                    adminControls.classList.add('visible');
+                } else {
+                    adminControls.classList.remove('visible');
+                }
+                loadGuides();
+            });
+        } catch (error) {
+            console.warn('Firebase not configured, using localStorage fallback:', error);
+            useLocalStorage = true;
+            
+            // Show admin controls in demo mode
+            const adminControls = document.getElementById('admin-controls');
+            adminControls.classList.add('visible');
+            
+            // Add demo mode notice
+            const hero = document.querySelector('.hero p');
+            const demoNotice = document.createElement('small');
+            demoNotice.style.color = '#ff9800';
+            demoNotice.textContent = '(Demo Mode - Using localStorage. See FIREBASE_SETUP.md to configure Firebase)';
+            hero.appendChild(document.createElement('br'));
+            hero.appendChild(demoNotice);
+            
+            loadGuides();
+        }
+
+        // Load guides from Firestore or localStorage
+        async function loadGuides() {
+            const loading = document.getElementById('loading');
+            const guidesGrid = document.getElementById('guides-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            loading.style.display = 'block';
+            guidesGrid.innerHTML = '';
+            emptyState.style.display = 'none';
+
+            try {
+                if (useLocalStorage) {
+                    // Load from localStorage
+                    const guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    loading.style.display = 'none';
+                    
+                    if (guides.length === 0) {
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+                    
+                    guides.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    guides.forEach((guide) => {
+                        const card = createGuideCard(guide.id, guide);
+                        guidesGrid.appendChild(card);
+                    });
+                } else {
+                    // Load from Firestore
+                    const snapshot = await db.collection('guides')
+                        .orderBy('createdAt', 'desc')
+                        .get();
+
+                    loading.style.display = 'none';
+
+                    if (snapshot.empty) {
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+
+                    snapshot.forEach((doc) => {
+                        const guide = doc.data();
+                        const card = createGuideCard(doc.id, guide);
+                        guidesGrid.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading guides:', error);
+                loading.innerHTML = 'Failed to load guides. Please try again later.';
+            }
+        }
+
+        // Create guide card element
+        function createGuideCard(id, guide) {
+            const card = document.createElement('div');
+            card.className = 'guide-card';
+            
+            let date;
+            if (useLocalStorage) {
+                date = new Date(guide.createdAt).toLocaleDateString();
+            } else {
+                date = guide.createdAt ? new Date(guide.createdAt.toDate()).toLocaleDateString() : 'Unknown date';
+            }
+            
+            card.innerHTML = `
+                <h3>${escapeHtml(guide.title)}</h3>
+                <div class="author">By ${escapeHtml(guide.authorName)}</div>
+                <div class="date">${escapeHtml(date)}</div>
+                <div class="content">${escapeHtml(guide.content)}</div>
+            `;
+
+            // Add admin actions if user is admin (or in demo mode)
+            if (useLocalStorage || isAdmin()) {
+                const actions = document.createElement('div');
+                actions.className = 'guide-actions';
+                
+                const editBtn = document.createElement('button');
+                editBtn.className = 'btn btn-secondary';
+                editBtn.textContent = 'Edit';
+                editBtn.addEventListener('click', () => editGuide(id));
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn btn-danger';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.addEventListener('click', () => deleteGuide(id));
+                
+                actions.appendChild(editBtn);
+                actions.appendChild(deleteBtn);
+                card.appendChild(actions);
+            }
+
+            return card;
+        }
+
+        // Open create modal
+        function openCreateModal() {
+            if (!useLocalStorage && !isAdmin()) {
+                alert('Only admins can create guides');
+                return;
+            }
+
+            currentEditingId = null;
+            document.getElementById('modal-title').textContent = 'Create New Guide';
+            document.getElementById('guide-title').value = '';
+            document.getElementById('guide-content').value = '';
+            document.getElementById('guide-modal').classList.add('active');
+        }
+
+        // Edit guide
+        async function editGuide(id) {
+            if (!useLocalStorage && !isAdmin()) {
+                alert('Only admins can edit guides');
+                return;
+            }
+
+            try {
+                if (useLocalStorage) {
+                    const guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    const guide = guides.find(g => g.id === id);
+                    if (!guide) {
+                        alert('Guide not found');
+                        return;
+                    }
+                    
+                    currentEditingId = id;
+                    document.getElementById('modal-title').textContent = 'Edit Guide';
+                    document.getElementById('guide-title').value = guide.title;
+                    document.getElementById('guide-content').value = guide.content;
+                    document.getElementById('guide-modal').classList.add('active');
+                } else {
+                    const doc = await db.collection('guides').doc(id).get();
+                    if (!doc.exists) {
+                        alert('Guide not found');
+                        return;
+                    }
+
+                    const guide = doc.data();
+                    currentEditingId = id;
+                    document.getElementById('modal-title').textContent = 'Edit Guide';
+                    document.getElementById('guide-title').value = guide.title;
+                    document.getElementById('guide-content').value = guide.content;
+                    document.getElementById('guide-modal').classList.add('active');
+                }
+            } catch (error) {
+                console.error('Error loading guide:', error);
+                alert('Failed to load guide');
+            }
+        }
+
+        // Delete guide
+        async function deleteGuide(id) {
+            if (!useLocalStorage && !isAdmin()) {
+                alert('Only admins can delete guides');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this guide?')) {
+                return;
+            }
+
+            try {
+                if (useLocalStorage) {
+                    let guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    guides = guides.filter(g => g.id !== id);
+                    localStorage.setItem('guides', JSON.stringify(guides));
+                    loadGuides();
+                } else {
+                    await db.collection('guides').doc(id).delete();
+                    loadGuides();
+                }
+            } catch (error) {
+                console.error('Error deleting guide:', error);
+                alert('Failed to delete guide');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('guide-modal').classList.remove('active');
+            currentEditingId = null;
+        }
+
+        // Handle form submission
+        document.getElementById('guide-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!useLocalStorage && !isAdmin()) {
+                alert('Only admins can create/edit guides');
+                return;
+            }
+
+            const title = document.getElementById('guide-title').value.trim();
+            const content = document.getElementById('guide-content').value.trim();
+
+            if (!title || !content) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            try {
+                if (useLocalStorage) {
+                    // Use localStorage
+                    let guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    
+                    if (currentEditingId) {
+                        // Update existing guide
+                        const index = guides.findIndex(g => g.id === currentEditingId);
+                        if (index !== -1) {
+                            guides[index] = {
+                                ...guides[index],
+                                title,
+                                content,
+                                updatedAt: new Date().toISOString()
+                            };
+                        }
+                    } else {
+                        // Create new guide
+                        const newGuide = {
+                            id: 'guide_' + Date.now(),
+                            title,
+                            content,
+                            authorEmail: 'demo@example.com',
+                            authorName: 'Demo User',
+                            createdAt: new Date().toISOString(),
+                            updatedAt: new Date().toISOString()
+                        };
+                        guides.push(newGuide);
+                    }
+                    
+                    localStorage.setItem('guides', JSON.stringify(guides));
+                } else {
+                    // Use Firestore
+                    const user = getCurrentUser();
+                    if (!user) {
+                        alert('Please sign in first');
+                        return;
+                    }
+
+                    const guideData = {
+                        title,
+                        content,
+                        authorEmail: user.email,
+                        authorName: user.displayName || user.email,
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    };
+
+                    if (currentEditingId) {
+                        // Update existing guide
+                        await db.collection('guides').doc(currentEditingId).update(guideData);
+                    } else {
+                        // Create new guide
+                        guideData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('guides').add(guideData);
+                    }
+                }
+
+                closeModal();
+                loadGuides();
+            } catch (error) {
+                console.error('Error saving guide:', error);
+                alert('Failed to save guide. Please try again.');
+            }
+        });
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Event listeners for buttons
+        document.getElementById('create-guide-btn').addEventListener('click', openCreateModal);
+        document.getElementById('cancel-btn').addEventListener('click', closeModal);
+
+        // Close modal when clicking outside
+        document.getElementById('guide-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'guide-modal') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
