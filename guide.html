@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide Details - AwesomeGav Gaming Channel</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header/Navigation */
+        header {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #333333;
+            padding: 5px;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #333333;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e0e0e0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        #auth-button {
+            background: #e0e0e0;
+            border: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #333333;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            height: 36px;
+            min-width: 100px;
+        }
+
+        #auth-button:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        /* Guide Content */
+        .guide-section {
+            padding: 4rem 0 6rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 2rem;
+            padding: 0.6rem 1.5rem;
+            background: #f5f5f5;
+            color: #333333;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .guide-container {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+        }
+
+        .guide-header {
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 2rem;
+        }
+
+        .guide-thumbnail {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .guide-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333333;
+        }
+
+        .guide-meta {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .guide-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .guide-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .badge {
+            background: #f0f0f0;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .guide-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #333333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .guide-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #e0e0e0;
+            color: #333333;
+        }
+
+        .btn-primary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #ff5555;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #ff3333;
+        }
+
+        .loading, .error-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .error-state h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #ff5555;
+        }
+
+        footer {
+            background: #f5f5f5;
+            color: #333333;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #333333;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .nav-close {
+            display: none;
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1002;
+        }
+
+        .nav-close span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #333333;
+            border-radius: 3px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .nav-close span:nth-child(1) {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .nav-close span:nth-child(2) {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .nav-close {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 2rem;
+                padding-top: 5rem;
+                gap: 1.5rem;
+                box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+                transition: right 0.3s ease;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links li {
+                width: 100%;
+            }
+
+            .nav-links a, #auth-button {
+                font-size: 1.1rem;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+
+            .logo img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .guide-container {
+                padding: 2rem;
+            }
+
+            .guide-title {
+                font-size: 2rem;
+            }
+
+            .guide-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <img src="logo.jpg" alt="AwesomeGav Logo" onerror="this.style.display='none'">
+                <span class="logo-text">AwesomeGav</span>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <button class="nav-close" id="nav-close" aria-label="Close menu">
+                    <span></span>
+                    <span></span>
+                </button>
+                <li><a href="index">Home</a></li>
+                <li><a href="videos">Videos</a></li>
+                <li><a href="games">Games</a></li>
+                <li><a href="guides">Guides</a></li>
+                <li><button id="auth-button">🔐 Sign In</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="guide-section">
+        <div class="container">
+            <a href="guides.html" class="back-button">← Back to Guides</a>
+            
+            <div id="loading" class="loading">Loading guide...</div>
+            <div id="error-state" class="error-state" style="display: none;">
+                <h2>Guide Not Found</h2>
+                <p>The guide you're looking for doesn't exist or has been removed.</p>
+                <a href="guides.html" class="btn btn-primary" style="margin-top: 1rem;">Back to Guides</a>
+            </div>
+            <div id="guide-container" class="guide-container" style="display: none;"></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AwesomeGav Gaming Channel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        let db = null;
+        let useLocalStorage = false;
+        let firebaseInitialized = false;
+        let currentGuideId = null;
+
+        // Try to initialize Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            firebaseInitialized = true;
+            
+            // Initialize auth
+            initAuth();
+
+            // Listen for auth state changes
+            firebase.auth().onAuthStateChanged(() => {
+                loadGuide();
+            });
+        } catch (error) {
+            console.warn('Firebase not configured, using localStorage fallback:', error);
+            useLocalStorage = true;
+            loadGuide();
+        }
+
+        // Get guide ID from URL
+        function getGuideIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Load guide details
+        async function loadGuide() {
+            currentGuideId = getGuideIdFromURL();
+            
+            if (!currentGuideId) {
+                showError();
+                return;
+            }
+
+            const loading = document.getElementById('loading');
+            const errorState = document.getElementById('error-state');
+            const guideContainer = document.getElementById('guide-container');
+            
+            loading.style.display = 'block';
+            errorState.style.display = 'none';
+            guideContainer.style.display = 'none';
+
+            try {
+                if (useLocalStorage) {
+                    // Load from localStorage
+                    const guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    const guide = guides.find(g => g.id === currentGuideId);
+                    
+                    if (!guide) {
+                        showError();
+                        return;
+                    }
+                    
+                    displayGuide(currentGuideId, guide);
+                } else {
+                    // Load from Firestore
+                    const doc = await db.collection('guides').doc(currentGuideId).get();
+                    
+                    if (!doc.exists) {
+                        showError();
+                        return;
+                    }
+                    
+                    const guide = doc.data();
+                    displayGuide(currentGuideId, guide);
+                }
+            } catch (error) {
+                console.error('Error loading guide:', error);
+                showError();
+            }
+        }
+
+        // Display guide
+        function displayGuide(id, guide) {
+            const loading = document.getElementById('loading');
+            const guideContainer = document.getElementById('guide-container');
+            
+            loading.style.display = 'none';
+            guideContainer.style.display = 'block';
+
+            let date;
+            if (useLocalStorage) {
+                date = new Date(guide.createdAt).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            } else {
+                date = guide.createdAt ? 
+                    new Date(guide.createdAt.toDate()).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    }) : 
+                    'Unknown date';
+            }
+
+            let html = '<div class="guide-header">';
+            
+            // Add thumbnail if available
+            if (guide.thumbnailUrl) {
+                html += `<img src="${escapeHtml(guide.thumbnailUrl)}" alt="${escapeHtml(guide.title)}" class="guide-thumbnail" onerror="this.style.display='none'">`;
+            }
+
+            html += `<h1 class="guide-title">${escapeHtml(guide.title)}</h1>`;
+            html += '<div class="guide-meta">';
+            html += `<div class="guide-meta-item">👤 <strong>By:</strong> ${escapeHtml(guide.authorName)}</div>`;
+            html += `<div class="guide-meta-item">📅 <strong>Published:</strong> ${escapeHtml(date)}</div>`;
+            html += '</div>';
+
+            // Add badges for metadata
+            html += '<div class="guide-badges">';
+            if (guide.game) {
+                html += `<span class="badge">🎮 ${escapeHtml(guide.game)}</span>`;
+            }
+            if (guide.category) {
+                html += `<span class="badge">📁 ${escapeHtml(guide.category)}</span>`;
+            }
+            if (guide.difficulty) {
+                html += `<span class="badge">⚡ ${escapeHtml(guide.difficulty)}</span>`;
+            }
+            if (guide.estimatedTime) {
+                html += `<span class="badge">⏱️ ${escapeHtml(guide.estimatedTime)}</span>`;
+            }
+            if (guide.tags && guide.tags.length > 0) {
+                guide.tags.forEach(tag => {
+                    html += `<span class="badge">🏷️ ${escapeHtml(tag)}</span>`;
+                });
+            }
+            html += '</div>';
+            html += '</div>';
+
+            // Add content
+            html += `<div class="guide-content">${escapeHtml(guide.content)}</div>`;
+
+            // Add admin actions if user is admin (or in demo mode)
+            if (useLocalStorage || isAdmin()) {
+                html += '<div class="guide-actions">';
+                html += '<button onclick="editGuide()" class="btn btn-primary">✏️ Edit Guide</button>';
+                html += '<button onclick="deleteGuide()" class="btn btn-danger">🗑️ Delete Guide</button>';
+                html += '</div>';
+            }
+
+            guideContainer.innerHTML = html;
+
+            // Update page title
+            document.title = `${guide.title} - AwesomeGav Gaming Channel`;
+        }
+
+        // Show error state
+        function showError() {
+            const loading = document.getElementById('loading');
+            const errorState = document.getElementById('error-state');
+            const guideContainer = document.getElementById('guide-container');
+            
+            loading.style.display = 'none';
+            errorState.style.display = 'block';
+            guideContainer.style.display = 'none';
+        }
+
+        // Edit guide
+        function editGuide() {
+            if (!useLocalStorage && !isAdmin()) {
+                alert('Only admins can edit guides');
+                return;
+            }
+            // Redirect to guides page with edit mode
+            window.location.href = `guides.html?edit=${currentGuideId}`;
+        }
+
+        // Delete guide
+        async function deleteGuide() {
+            if (!useLocalStorage && !isAdmin()) {
+                alert('Only admins can delete guides');
+                return;
+            }
+
+            if (!confirm('Are you sure you want to delete this guide?')) {
+                return;
+            }
+
+            try {
+                if (useLocalStorage) {
+                    let guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    guides = guides.filter(g => g.id !== currentGuideId);
+                    localStorage.setItem('guides', JSON.stringify(guides));
+                } else {
+                    await db.collection('guides').doc(currentGuideId).delete();
+                }
+
+                // Redirect back to guides page
+                alert('Guide deleted successfully');
+                window.location.href = 'guides.html';
+            } catch (error) {
+                console.error('Error deleting guide:', error);
+                alert('Failed to delete guide. Error: ' + (error.message || 'Unknown error'));
+            }
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const navClose = document.getElementById('nav-close');
+
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            if (navClose) {
+                navClose.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            }
+
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
