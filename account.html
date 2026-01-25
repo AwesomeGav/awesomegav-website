@@ -488,9 +488,6 @@
                                 </div>
                                 <span>Dark</span>
                             </div>
-                            <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
-                                <em>Note: Dark mode coming soon!</em>
-                            </p>
                         </div>
                     </div>
 
@@ -548,9 +545,16 @@
         // Theme toggle
         const themeToggle = document.getElementById('theme-toggle');
         if (themeToggle) {
+            // Initialize toggle state based on saved theme
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                themeToggle.classList.add('active');
+            }
+            
             themeToggle.addEventListener('click', () => {
                 themeToggle.classList.toggle('active');
-                // Future: Implement dark mode toggle
+                const newTheme = window.themeManager.toggle();
+                console.log('Theme switched to:', newTheme);
             });
         }
     </script>
@@ -562,6 +566,173 @@
     <!-- Firebase Config -->
     <script src="firebase-config.js"></script>
     <script src="auth.js"></script>
+
+    <!-- Dark Theme Support -->
+    <style id="dark-theme-styles">
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #fafafa;
+            --bg-tertiary: #f8f8f8;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --border-color: #e0e0e0;
+            --border-light: #f0f0f0;
+            --shadow-light: rgba(0, 0, 0, 0.03);
+            --shadow-medium: rgba(0, 0, 0, 0.05);
+            --shadow-heavy: rgba(0, 0, 0, 0.1);
+            --accent-bg: #e0e0e0;
+            --accent-hover: #d0d0d0;
+            --logo-bg: #333333;
+        }
+
+        body.dark-theme {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2a2a2a;
+            --bg-tertiary: #252525;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-tertiary: #808080;
+            --border-color: #404040;
+            --border-light: #353535;
+            --shadow-light: rgba(0, 0, 0, 0.3);
+            --shadow-medium: rgba(0, 0, 0, 0.4);
+            --shadow-heavy: rgba(0, 0, 0, 0.5);
+            --accent-bg: #404040;
+            --accent-hover: #4a4a4a;
+            --logo-bg: #e0e0e0;
+        }
+
+        body {
+            background: var(--bg-primary) !important;
+            color: var(--text-primary) !important;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background: var(--bg-primary) !important;
+            box-shadow: 0 2px 20px var(--shadow-light) !important;
+        }
+
+        .logo-text {
+            color: var(--text-primary) !important;
+        }
+
+        .nav-links a {
+            color: var(--text-primary) !important;
+        }
+
+        .nav-links a::after {
+            background: var(--border-color) !important;
+        }
+
+        .hamburger span {
+            background: var(--text-primary) !important;
+        }
+
+        .nav-close span {
+            background: var(--text-primary) !important;
+        }
+
+        #auth-button {
+            background: var(--accent-bg) !important;
+            color: var(--text-primary) !important;
+        }
+
+        #auth-button:hover {
+            background: var(--accent-hover) !important;
+        }
+
+        .account-header h1 {
+            color: var(--text-primary) !important;
+        }
+
+        .profile-section {
+            background: var(--bg-primary) !important;
+            border-color: var(--border-light) !important;
+            box-shadow: 0 5px 20px var(--shadow-medium) !important;
+        }
+
+        .profile-header {
+            border-bottom-color: var(--border-light) !important;
+        }
+
+        .profile-image {
+            border-color: var(--border-color) !important;
+        }
+
+        .profile-info h2 {
+            color: var(--text-primary) !important;
+        }
+
+        .profile-info p {
+            color: var(--text-secondary) !important;
+        }
+
+        .settings-section h3 {
+            color: var(--text-primary) !important;
+        }
+
+        .setting-item {
+            background: var(--bg-secondary) !important;
+        }
+
+        .setting-item label {
+            color: var(--text-primary) !important;
+        }
+
+        .setting-item input,
+        .setting-item select {
+            background: var(--bg-primary) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .setting-item input:focus,
+        .setting-item select:focus {
+            border-color: var(--text-primary) !important;
+        }
+
+        .toggle {
+            background: var(--accent-bg) !important;
+        }
+
+        .toggle.active {
+            background: var(--text-primary) !important;
+        }
+
+        .toggle-slider {
+            background: var(--bg-primary) !important;
+        }
+
+        .btn-primary {
+            background: var(--accent-bg) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover) !important;
+        }
+
+        .loading-state p {
+            color: var(--text-secondary) !important;
+        }
+
+        footer {
+            background: var(--bg-tertiary) !important;
+            color: var(--text-primary) !important;
+        }
+
+        body.dark-theme .nav-links {
+            background: var(--bg-primary) !important;
+        }
+
+        body.dark-theme .logo img {
+            background: var(--logo-bg) !important;
+        }
+    </style>
+
+    <script src="theme.js"></script>
 
     <script>
         // Initialize Firebase Auth for account page

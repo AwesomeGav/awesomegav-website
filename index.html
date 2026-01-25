@@ -202,6 +202,183 @@
 <script src="firebase-config.js"></script>
 <script src="auth.js"></script>
 
+<!-- Dark Theme Support -->
+<style id="dark-theme-styles">
+    :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #fafafa;
+        --bg-tertiary: #f5f5f5;
+        --text-primary: #333333;
+        --text-secondary: #666666;
+        --text-tertiary: #999999;
+        --border-color: #e0e0e0;
+        --border-light: #f0f0f0;
+        --shadow-light: rgba(0, 0, 0, 0.03);
+        --shadow-medium: rgba(0, 0, 0, 0.05);
+        --shadow-heavy: rgba(0, 0, 0, 0.1);
+        --accent-bg: #e0e0e0;
+        --accent-hover: #d0d0d0;
+        --logo-bg: #333333;
+    }
+
+    body.dark-theme {
+        --bg-primary: #1a1a1a;
+        --bg-secondary: #2a2a2a;
+        --bg-tertiary: #333333;
+        --text-primary: #e0e0e0;
+        --text-secondary: #b0b0b0;
+        --text-tertiary: #808080;
+        --border-color: #404040;
+        --border-light: #353535;
+        --shadow-light: rgba(0, 0, 0, 0.3);
+        --shadow-medium: rgba(0, 0, 0, 0.4);
+        --shadow-heavy: rgba(0, 0, 0, 0.5);
+        --accent-bg: #404040;
+        --accent-hover: #4a4a4a;
+        --logo-bg: #e0e0e0;
+    }
+
+    body {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    header {
+        background: var(--bg-primary) !important;
+        box-shadow: 0 2px 20px var(--shadow-light) !important;
+    }
+
+    .logo-text {
+        color: var(--text-primary) !important;
+    }
+
+    .nav-links a {
+        color: var(--text-primary) !important;
+    }
+
+    .nav-links a::after {
+        background: var(--border-color) !important;
+    }
+
+    .hamburger span {
+        background: var(--text-primary) !important;
+    }
+
+    .nav-close span {
+        background: var(--text-primary) !important;
+    }
+
+    #auth-button {
+        background: var(--accent-bg) !important;
+        color: var(--text-primary) !important;
+    }
+
+    #auth-button:hover {
+        background: var(--accent-hover) !important;
+    }
+
+    .hero h1 {
+        color: var(--text-primary) !important;
+    }
+
+    .hero p {
+        color: var(--text-secondary) !important;
+    }
+
+    .btn-primary {
+        background: var(--accent-bg) !important;
+        color: var(--text-primary) !important;
+    }
+
+    .btn-primary:hover {
+        background: var(--accent-hover) !important;
+    }
+
+    .btn-secondary {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+
+    .btn-secondary:hover {
+        background: var(--bg-secondary) !important;
+    }
+
+    .features {
+        background: var(--bg-primary) !important;
+    }
+
+    .section-title {
+        color: var(--text-primary) !important;
+    }
+
+    .feature-card {
+        background: var(--bg-primary) !important;
+        border-color: var(--border-light) !important;
+        box-shadow: 0 5px 20px var(--shadow-medium) !important;
+    }
+
+    .feature-card h3 {
+        color: var(--text-primary) !important;
+    }
+
+    .feature-card p {
+        color: var(--text-secondary) !important;
+    }
+
+    .videos {
+        background: var(--bg-secondary) !important;
+    }
+
+    .video-card {
+        background: var(--bg-primary) !important;
+        box-shadow: 0 5px 20px var(--shadow-medium) !important;
+    }
+
+    .video-thumbnail {
+        background: var(--bg-secondary) !important;
+        color: var(--text-secondary) !important;
+    }
+
+    .video-info h3 {
+        color: var(--text-primary) !important;
+    }
+
+    .video-info p {
+        color: var(--text-secondary) !important;
+    }
+
+    footer {
+        background: var(--bg-tertiary) !important;
+        color: var(--text-primary) !important;
+    }
+
+    .social-btn {
+        background: var(--bg-primary) !important;
+        color: var(--text-primary) !important;
+        box-shadow: 0 2px 10px var(--shadow-heavy) !important;
+    }
+
+    .social-btn:hover {
+        background: var(--accent-bg) !important;
+    }
+
+    .social-btn svg {
+        fill: var(--text-primary) !important;
+    }
+
+    body.dark-theme .nav-links {
+        background: var(--bg-primary) !important;
+    }
+
+    body.dark-theme .logo img {
+        background: var(--logo-bg) !important;
+    }
+</style>
+
+<script src="theme.js"></script>
+
 <script>
     // Initialize Firebase Auth for index.html
     try {

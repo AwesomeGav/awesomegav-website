@@ -272,6 +272,31 @@ document.addEventListener('click',(e)=>{if(!hamburger.contains(e.target)&&!navLi
 <script src="firebase-config.js"></script>
 <script src="auth.js"></script>
 
+<!-- Dark Theme Support -->
+<style>
+:root{--bg-primary:#fff;--bg-secondary:#fafafa;--text-primary:#333;--text-secondary:#666;--text-tertiary:#999;--border-color:#e0e0e0;--border-light:#f0f0f0;--shadow-light:rgba(0,0,0,.03);--shadow-medium:rgba(0,0,0,.05);--shadow-heavy:rgba(0,0,0,.1);--accent-bg:#e0e0e0;--accent-hover:#d0d0d0;--logo-bg:#333}
+body.dark-theme{--bg-primary:#1a1a1a;--bg-secondary:#2a2a2a;--text-primary:#e0e0e0;--text-secondary:#b0b0b0;--text-tertiary:#808080;--border-color:#404040;--border-light:#353535;--shadow-light:rgba(0,0,0,.3);--shadow-medium:rgba(0,0,0,.4);--shadow-heavy:rgba(0,0,0,.5);--accent-bg:#404040;--accent-hover:#4a4a4a;--logo-bg:#e0e0e0}
+body{background:var(--bg-primary)!important;color:var(--text-primary)!important;transition:background .3s,color .3s}
+header{background:var(--bg-primary)!important;box-shadow:0 2px 20px var(--shadow-light)!important}
+.logo span{color:var(--text-primary)!important}
+.nav-links a{color:var(--text-primary)!important}
+.hamburger span{background:var(--text-primary)!important}
+.nav-close span{background:var(--text-primary)!important}
+#auth-button{background:var(--accent-bg)!important;color:var(--text-primary)!important}
+#auth-button:hover{background:var(--accent-hover)!important}
+.videos-header h1{color:var(--text-primary)!important}
+.videos-header p{color:var(--text-secondary)!important}
+.video-card{background:var(--bg-primary)!important;box-shadow:0 5px 20px var(--shadow-medium)!important}
+.thumb{background:var(--bg-secondary)!important}
+.video-info h3{color:var(--text-primary)!important}
+.date{color:var(--text-tertiary)!important}
+.actions a,.actions button{background:var(--bg-secondary)!important;color:var(--text-primary)!important;border-color:var(--border-color)!important}
+.actions a:hover,.actions button:hover{background:var(--accent-bg)!important}
+body.dark-theme .nav-links{background:var(--bg-primary)!important}
+body.dark-theme .logo img{background:var(--logo-bg)!important}
+</style>
+<script src="theme.js"></script>
+
 <script>
 // Initialize Firebase Auth for videos.html
 try {
