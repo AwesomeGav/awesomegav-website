@@ -138,9 +138,19 @@ footer{
 .hamburger.active span:nth-child(2){opacity:0}
 .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(7px,-7px)}
 
+/* Close button inside mobile menu */
+.nav-close{display:none;position:absolute;top:1.5rem;right:1.5rem;width:40px;height:40px;background:none;border:none;cursor:pointer;padding:0;z-index:1002}
+.nav-close span{display:block;width:28px;height:3px;background:#333;border-radius:3px;position:absolute;top:50%;left:50%}
+.nav-close span:nth-child(1){transform:translate(-50%,-50%) rotate(45deg)}
+.nav-close span:nth-child(2){transform:translate(-50%,-50%) rotate(-45deg)}
+
+#auth-button{background:#e0e0e0;border:none;padding:0.6rem 1.2rem;border-radius:50px;cursor:pointer;font-weight:600;color:#333;transition:all .3s;display:flex;align-items:center;gap:0.5rem}
+#auth-button:hover{background:#d0d0d0;transform:translateY(-2px)}
+
 @media(max-width:768px){
-    .hamburger{display:flex}
-    .nav-links{position:fixed;top:70px;right:-100%;width:280px;height:calc(100vh - 70px);background:#fff;flex-direction:column;padding:2rem;gap:1.5rem;box-shadow:-2px 0 20px rgba(0,0,0,.1);transition:right .3s;z-index:999}
+    .hamburger{display:flex;z-index:1001}
+    .nav-close{display:block}
+    .nav-links{position:fixed;top:0;right:-100%;width:280px;height:100vh;background:#fff;flex-direction:column;padding:2rem;padding-top:5rem;gap:1.5rem;box-shadow:-2px 0 20px rgba(0,0,0,.1);transition:right .3s;z-index:999}
     .nav-links.active{right:0}
     .nav-links a{font-size:1.1rem}
     .videos-header h1{font-size:2.2rem}
@@ -162,10 +172,15 @@ footer{
 <span>AwesomeGav</span>
 </a>
 <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div><ul class="nav-links" id="nav-links">
+<button class="nav-close" id="nav-close" aria-label="Close menu">
+<span></span>
+<span></span>
+</button>
 <li><a href="index.html">Home</a></li>
 <li><a href="videos.html">Videos</a></li>
 <li><a href="games.html">Games</a></li>
 <li><a href="guides.html">Guides</a></li>
+<li><button id="auth-button">🔐 Sign In</button></li>
 </ul>
 </nav>
 </header>
@@ -245,9 +260,34 @@ function closeModal(){
 <script>
 const hamburger=document.getElementById('hamburger');
 const navLinks=document.getElementById('nav-links');
+const navClose=document.getElementById('nav-close');
 hamburger.addEventListener('click',()=>{hamburger.classList.toggle('active');navLinks.classList.toggle('active')});
+if(navClose){navClose.addEventListener('click',()=>{hamburger.classList.remove('active');navLinks.classList.remove('active')})}
 navLinks.querySelectorAll('a').forEach(link=>{link.addEventListener('click',()=>{hamburger.classList.remove('active');navLinks.classList.remove('active')})});
 document.addEventListener('click',(e)=>{if(!hamburger.contains(e.target)&&!navLinks.contains(e.target)){hamburger.classList.remove('active');navLinks.classList.remove('active')}});
+</script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+<!-- Firebase Config -->
+<script src="firebase-config.js"></script>
+<script src="auth.js"></script>
+
+<script>
+// Initialize Firebase Auth for videos.html
+try {
+    firebase.initializeApp(firebaseConfig);
+    initAuth();
+} catch (error) {
+    console.warn('Firebase auth not configured:', error);
+    // Hide auth button if Firebase is not configured
+    const authButton = document.getElementById('auth-button');
+    if (authButton) {
+        authButton.style.display = 'none';
+    }
+}
 </script>
 </body>
 </html>

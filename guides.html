@@ -374,20 +374,60 @@
             transform: rotate(-45deg) translate(7px, -7px);
         }
 
+        /* Close button inside mobile menu */
+        .nav-close {
+            display: none;
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1002;
+        }
+
+        .nav-close span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #333333;
+            border-radius: 3px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .nav-close span:nth-child(1) {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .nav-close span:nth-child(2) {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
         @media (max-width: 768px) {
             .hamburger {
                 display: flex;
+                z-index: 1001;
+            }
+
+            .nav-close {
+                display: block;
             }
 
             .nav-links {
                 position: fixed;
-                top: 80px;
+                top: 0;
                 right: -100%;
                 width: 280px;
-                height: calc(100vh - 80px);
+                height: 100vh;
                 background: #ffffff;
                 flex-direction: column;
                 padding: 2rem;
+                padding-top: 5rem;
                 gap: 1.5rem;
                 box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
                 transition: right 0.3s ease;
@@ -455,6 +495,10 @@
                 <span></span>
             </div>
             <ul class="nav-links" id="nav-links">
+                <button class="nav-close" id="nav-close" aria-label="Close menu">
+                    <span></span>
+                    <span></span>
+                </button>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="videos.html">Videos</a></li>
                 <li><a href="games.html">Games</a></li>
@@ -868,12 +912,21 @@
         // Hamburger menu functionality
         const hamburger = document.getElementById('hamburger');
         const navLinks = document.getElementById('nav-links');
+        const navClose = document.getElementById('nav-close');
 
         if (hamburger && navLinks) {
             hamburger.addEventListener('click', () => {
                 hamburger.classList.toggle('active');
                 navLinks.classList.toggle('active');
             });
+
+            // Close button click handler
+            if (navClose) {
+                navClose.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            }
 
             // Close menu when clicking on a link
             navLinks.querySelectorAll('a').forEach(link => {
