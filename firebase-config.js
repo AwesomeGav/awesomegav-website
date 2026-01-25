@@ -2,13 +2,13 @@
 // NOTE: These are public credentials for a client-side Firebase app
 // Security is enforced through Firebase Security Rules, not by hiding these values
 const firebaseConfig = {
-    apiKey: "AIzaSyB7GGxLoJ-g4DBccKehfDWoeuEW5tAXYI4",
-    authDomain: "awesomegavweb.firebaseapp.com",
-    projectId: "awesomegavweb",
-    storageBucket: "awesomegavweb.firebasestorage.app",
-    messagingSenderId: "840404249756",
-    appId: "1:840404249756:web:bfba752a3c6c780d36d159",
-    measurementId: "G-Q9QPMNVJR1"
+    apiKey: "AIzaSyCTSCBMUP69F393LTDgrPjSFrqUPDb40Cs",
+    authDomain: "awesomegav-website.firebaseapp.com",
+    projectId: "awesomegav-website",
+    storageBucket: "awesomegav-website.firebasestorage.app",
+    messagingSenderId: "362552771368",
+    appId: "1:362552771368:web:3c084cf7ba8754afb5861d",
+    measurementId: "G-BKQ8YBQHXK"
 };
 
 // Admin email
