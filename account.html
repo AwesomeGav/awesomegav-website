@@ -553,18 +553,6 @@
                 // Future: Implement dark mode toggle
             });
         }
-
-        // Save settings
-        const saveButton = document.getElementById('save-settings');
-        if (saveButton) {
-            saveButton.addEventListener('click', () => {
-                const displayName = document.getElementById('display-name').value;
-                const emailPrefs = document.getElementById('email-prefs').value;
-                
-                // Future: Save to Firebase
-                alert('Settings saved! (This will be connected to Firebase in the future)');
-            });
-        }
     </script>
 
     <!-- Firebase SDK -->
@@ -594,11 +582,38 @@
                     accountData.style.display = 'block';
                     notSignedIn.style.display = 'none';
                     
+                    // Get display name from localStorage or Firebase
+                    const displayName = getDisplayName(user);
+                    
                     // Populate profile data
                     document.getElementById('profile-image').src = user.photoURL || 'logo.jpg';
-                    document.getElementById('profile-name').textContent = user.displayName || 'User';
+                    document.getElementById('profile-name').textContent = displayName;
                     document.getElementById('profile-email').textContent = user.email;
-                    document.getElementById('display-name').value = user.displayName || '';
+                    document.getElementById('display-name').value = displayName;
+                    
+                    // Save settings button
+                    const saveButton = document.getElementById('save-settings');
+                    if (saveButton) {
+                        saveButton.addEventListener('click', () => {
+                            const newDisplayName = document.getElementById('display-name').value.trim();
+                            const emailPrefs = document.getElementById('email-prefs').value;
+                            
+                            if (newDisplayName) {
+                                // Save display name to localStorage
+                                saveDisplayName(user.uid, newDisplayName);
+                                
+                                // Update the displayed name immediately
+                                document.getElementById('profile-name').textContent = newDisplayName;
+                                
+                                // Update auth button if it exists
+                                updateUIForAuth(user);
+                                
+                                alert('Settings saved successfully!');
+                            } else {
+                                alert('Display name cannot be empty.');
+                            }
+                        });
+                    }
                     
                     // Sign out button
                     const signOutBtn = document.getElementById('sign-out-btn');

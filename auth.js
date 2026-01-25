@@ -2,6 +2,26 @@
 let currentUser = null;
 let auth = null;
 
+// Get saved display name from localStorage
+function getSavedDisplayName(userId) {
+    if (!userId) return null;
+    const saved = localStorage.getItem(`displayName_${userId}`);
+    return saved;
+}
+
+// Save display name to localStorage
+function saveDisplayName(userId, displayName) {
+    if (!userId) return;
+    localStorage.setItem(`displayName_${userId}`, displayName);
+}
+
+// Get display name (prioritize localStorage over Firebase)
+function getDisplayName(user) {
+    if (!user) return null;
+    const savedName = getSavedDisplayName(user.uid);
+    return savedName || user.displayName || user.email;
+}
+
 // Initialize Firebase Auth
 function initAuth() {
     if (!firebase || !firebase.auth) {
@@ -32,9 +52,10 @@ function updateUIForAuth(user) {
     
     if (user) {
         // User is signed in
+        const displayName = getDisplayName(user);
         authBtn.innerHTML = `
             <img src="${user.photoURL || 'logo.jpg'}" alt="Profile" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
-            <span>${user.displayName || user.email}</span>
+            <span>${displayName}</span>
         `;
         authBtn.addEventListener('click', () => {
             window.location.href = 'account';
