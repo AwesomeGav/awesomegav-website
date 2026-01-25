@@ -8,7 +8,42 @@ https://awesomegav.github.io/awesomegav-website
 - **Videos**: Automatically updated from YouTube channel
 - **Games**: Showcase of games featured on the channel
 - **Guides**: Gaming guides and tutorials (with admin CRUD functionality)
+- **Account Page**: User profile and settings page (requires sign-in)
 - **Google Authentication**: Sign in with Google for admin features
+- **Clean URLs**: All pages use clean URLs without `.html` extensions
+
+## Account Page
+
+The Account page provides authenticated users with:
+- Profile display (name, email, profile picture)
+- Settings customization (display name, email preferences)
+- Theme preferences (dark mode coming soon)
+- Sign out functionality
+
+Access your account by signing in and clicking your profile button in the navigation.
+
+## Clean URLs
+
+The site uses clean URLs without `.html` extensions:
+- `https://awesomegav.github.io/awesomegav-website/videos` instead of `/videos.html`
+- `https://awesomegav.github.io/awesomegav-website/games` instead of `/games.html`
+- etc.
+
+Both formats work for backward compatibility. Clean URLs are handled by Jekyll on GitHub Pages via `_config.yml`.
+
+### Removing the `/awesomegav-website/` path from URLs
+
+The `/awesomegav-website/` part appears in URLs because this is a GitHub Pages **project site**. To remove it and use just `awesomegav.github.io`:
+
+**Option 1: Rename Repository (Recommended)**
+- Rename the repository from `awesomegav-website` to `AwesomeGav.github.io`
+- This makes it a **user site** instead of a project site
+- URLs will be: `https://awesomegav.github.io/videos`
+
+**Option 2: Custom Domain**
+- Purchase and configure a custom domain (e.g., `awesomegav.com`)
+- Configure DNS settings and GitHub Pages custom domain
+- URLs will be: `https://awesomegav.com/videos`
 
 ## Guides Page
 
@@ -45,3 +80,4 @@ python3 -m http.server 8000
 - Firebase Firestore (NoSQL database)
 - Responsive design with CSS Grid
 - Modern ES6+ JavaScript
+- Jekyll for GitHub Pages (clean URLs)

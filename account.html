@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - AwesomeGav</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header/Navigation */
+        header {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #333333;
+            padding: 5px;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #333333;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e0e0e0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #333333;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        .nav-close {
+            display: none;
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1002;
+        }
+
+        .nav-close span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #333333;
+            border-radius: 3px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .nav-close span:nth-child(1) {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .nav-close span:nth-child(2) {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        #auth-button {
+            background: #e0e0e0;
+            border: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #333333;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            height: 36px;
+            min-width: 100px;
+        }
+
+        #auth-button:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        /* Account Content */
+        .account-content {
+            padding: 4rem 0;
+            min-height: calc(100vh - 300px);
+        }
+
+        .account-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .account-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #333333;
+        }
+
+        .profile-section {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            border: 1px solid #f0f0f0;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e0e0e0;
+        }
+
+        .profile-info h2 {
+            font-size: 1.8rem;
+            color: #333333;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-info p {
+            color: #666666;
+            font-size: 1rem;
+        }
+
+        .settings-section {
+            margin-top: 2rem;
+        }
+
+        .settings-section h3 {
+            font-size: 1.4rem;
+            color: #333333;
+            margin-bottom: 1.5rem;
+        }
+
+        .setting-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 10px;
+        }
+
+        .setting-item label {
+            display: block;
+            font-weight: 600;
+            color: #333333;
+            margin-bottom: 0.5rem;
+        }
+
+        .setting-item input,
+        .setting-item select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .setting-item input:focus,
+        .setting-item select:focus {
+            outline: none;
+            border-color: #333333;
+        }
+
+        .setting-item .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle.active {
+            background: #333333;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #e0e0e0;
+            color: #333333;
+        }
+
+        .btn-primary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #ff4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #cc0000;
+            transform: translateY(-2px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .loading-state p {
+            font-size: 1.2rem;
+            color: #666666;
+        }
+
+        /* Footer */
+        footer {
+            background: #f5f5f5;
+            color: #333333;
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .nav-close {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 2rem;
+                padding-top: 5rem;
+                gap: 1.5rem;
+                box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+                transition: right 0.3s ease;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .account-header h1 {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+
+            .logo img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <img src="logo.jpg" alt="AwesomeGav Logo" onerror="this.style.display='none'">
+                <span class="logo-text">AwesomeGav</span>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <button class="nav-close" id="nav-close" aria-label="Close menu">
+                    <span></span>
+                    <span></span>
+                </button>
+                <li><a href="index">Home</a></li>
+                <li><a href="videos">Videos</a></li>
+                <li><a href="games">Games</a></li>
+                <li><a href="guides">Guides</a></li>
+                <li><a href="index#about">About</a></li>
+                <li><a href="index#contact">Contact</a></li>
+                <li><button id="auth-button">🔐 Sign In</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="account-content">
+        <div class="container">
+            <div class="account-header">
+                <h1>Account Settings</h1>
+            </div>
+
+            <div id="loading" class="loading-state">
+                <p>Loading your account...</p>
+            </div>
+
+            <div id="account-data" style="display: none;">
+                <div class="profile-section">
+                    <div class="profile-header">
+                        <img id="profile-image" src="logo.jpg" alt="Profile Picture" class="profile-image">
+                        <div class="profile-info">
+                            <h2 id="profile-name">User Name</h2>
+                            <p id="profile-email">user@example.com</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>Profile Settings</h3>
+                        
+                        <div class="setting-item">
+                            <label for="display-name">Display Name</label>
+                            <input type="text" id="display-name" placeholder="Your display name">
+                        </div>
+
+                        <div class="setting-item">
+                            <label>Email Preferences</label>
+                            <select id="email-prefs">
+                                <option value="all">All notifications</option>
+                                <option value="important">Important only</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-item">
+                            <label>Theme Preference</label>
+                            <div class="toggle-switch">
+                                <span>Light</span>
+                                <div class="toggle" id="theme-toggle">
+                                    <div class="toggle-slider"></div>
+                                </div>
+                                <span>Dark</span>
+                            </div>
+                            <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+                                <em>Note: Dark mode coming soon!</em>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" id="save-settings">Save Changes</button>
+                        <button class="btn btn-danger" id="sign-out-btn">Sign Out</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="not-signed-in" style="display: none;">
+                <div class="profile-section" style="text-align: center;">
+                    <h2 style="margin-bottom: 1rem;">You are not signed in</h2>
+                    <p style="color: #666; margin-bottom: 2rem;">Please sign in to view your account settings.</p>
+                    <button class="btn btn-primary" onclick="window.location.href='index'">Go to Home</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AwesomeGav Gaming Channel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const navClose = document.getElementById('nav-close');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        if (navClose) {
+            navClose.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        }
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                themeToggle.classList.toggle('active');
+                // Future: Implement dark mode toggle
+            });
+        }
+
+        // Save settings
+        const saveButton = document.getElementById('save-settings');
+        if (saveButton) {
+            saveButton.addEventListener('click', () => {
+                const displayName = document.getElementById('display-name').value;
+                const emailPrefs = document.getElementById('email-prefs').value;
+                
+                // Future: Save to Firebase
+                alert('Settings saved! (This will be connected to Firebase in the future)');
+            });
+        }
+    </script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        // Initialize Firebase Auth for account page
+        try {
+            firebase.initializeApp(firebaseConfig);
+            initAuth();
+            
+            // Wait for auth state
+            firebase.auth().onAuthStateChanged((user) => {
+                const loading = document.getElementById('loading');
+                const accountData = document.getElementById('account-data');
+                const notSignedIn = document.getElementById('not-signed-in');
+                
+                loading.style.display = 'none';
+                
+                if (user) {
+                    // User is signed in, show account data
+                    accountData.style.display = 'block';
+                    notSignedIn.style.display = 'none';
+                    
+                    // Populate profile data
+                    document.getElementById('profile-image').src = user.photoURL || 'logo.jpg';
+                    document.getElementById('profile-name').textContent = user.displayName || 'User';
+                    document.getElementById('profile-email').textContent = user.email;
+                    document.getElementById('display-name').value = user.displayName || '';
+                    
+                    // Sign out button
+                    const signOutBtn = document.getElementById('sign-out-btn');
+                    signOutBtn.addEventListener('click', async () => {
+                        try {
+                            await firebase.auth().signOut();
+                            window.location.href = 'index';
+                        } catch (error) {
+                            console.error('Sign-out error:', error);
+                        }
+                    });
+                } else {
+                    // User is not signed in
+                    accountData.style.display = 'none';
+                    notSignedIn.style.display = 'block';
+                }
+            });
+        } catch (error) {
+            console.warn('Firebase auth not configured:', error);
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('not-signed-in').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

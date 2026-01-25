@@ -33,10 +33,12 @@ function updateUIForAuth(user) {
     if (user) {
         // User is signed in
         authBtn.innerHTML = `
-            <img src="${user.photoURL || 'logo.jpg'}" alt="Profile" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 8px;">
+            <img src="${user.photoURL || 'logo.jpg'}" alt="Profile" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
             <span>${user.displayName || user.email}</span>
         `;
-        authBtn.addEventListener('click', signOut);
+        authBtn.addEventListener('click', () => {
+            window.location.href = 'account';
+        });
         
         if (userInfo) {
             userInfo.textContent = `Signed in as: ${user.email}`;
