@@ -74,7 +74,8 @@ async function signOut() {
 
 // Check if current user is admin
 function isAdmin() {
-    return currentUser && currentUser.email === ADMIN_EMAIL;
+    return currentUser && currentUser.email && 
+           currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 }
 
 // Get current user
