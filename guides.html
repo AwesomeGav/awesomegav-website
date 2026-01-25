@@ -472,7 +472,11 @@
             
             // Add demo mode notice
             const hero = document.querySelector('.hero p');
-            hero.innerHTML = 'Tips, tricks, and tutorials from AwesomeGav<br><small style="color: #ff9800;">(Demo Mode - Using localStorage. See FIREBASE_SETUP.md to configure Firebase)</small>';
+            const demoNotice = document.createElement('small');
+            demoNotice.style.color = '#ff9800';
+            demoNotice.textContent = '(Demo Mode - Using localStorage. See FIREBASE_SETUP.md to configure Firebase)';
+            hero.appendChild(document.createElement('br'));
+            hero.appendChild(demoNotice);
             
             loadGuides();
         }
@@ -543,7 +547,7 @@
             card.innerHTML = `
                 <h3>${escapeHtml(guide.title)}</h3>
                 <div class="author">By ${escapeHtml(guide.authorName)}</div>
-                <div class="date">${date}</div>
+                <div class="date">${escapeHtml(date)}</div>
                 <div class="content">${escapeHtml(guide.content)}</div>
             `;
 
@@ -551,10 +555,19 @@
             if (useLocalStorage || isAdmin()) {
                 const actions = document.createElement('div');
                 actions.className = 'guide-actions';
-                actions.innerHTML = `
-                    <button class="btn btn-secondary" onclick="editGuide('${id}')">Edit</button>
-                    <button class="btn btn-danger" onclick="deleteGuide('${id}')">Delete</button>
-                `;
+                
+                const editBtn = document.createElement('button');
+                editBtn.className = 'btn btn-secondary';
+                editBtn.textContent = 'Edit';
+                editBtn.onclick = () => editGuide(id);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'btn btn-danger';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => deleteGuide(id);
+                
+                actions.appendChild(editBtn);
+                actions.appendChild(deleteBtn);
                 card.appendChild(actions);
             }
 
