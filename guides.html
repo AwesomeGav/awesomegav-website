@@ -218,6 +218,7 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
             border: 1px solid #f0f0f0;
+            cursor: pointer;
         }
 
         .guide-card:hover {
@@ -238,9 +239,22 @@
         }
 
         .guide-card .content {
-            color: #666666;
-            line-height: 1.8;
-            margin-bottom: 1.5rem;
+            display: none;
+        }
+        
+        .guide-card .metadata {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .guide-card .metadata .badge {
+            background: #f0f0f0;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #666;
         }
 
         .guide-card .date {
@@ -315,8 +329,17 @@
         }
 
         .form-group textarea {
-            min-height: 150px;
+            min-height: 200px;
             resize: vertical;
+        }
+        
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
         }
 
         .form-actions {
@@ -544,6 +567,44 @@
                     <input type="text" id="guide-title" required placeholder="Enter guide title">
                 </div>
                 <div class="form-group">
+                    <label for="guide-game">Game *</label>
+                    <input type="text" id="guide-game" required placeholder="Which game is this guide for?">
+                </div>
+                <div class="form-group">
+                    <label for="guide-category">Category *</label>
+                    <select id="guide-category" required>
+                        <option value="">Select a category</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Tips & Tricks">Tips & Tricks</option>
+                        <option value="Walkthrough">Walkthrough</option>
+                        <option value="Strategy">Strategy</option>
+                        <option value="Tutorial">Tutorial</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="guide-difficulty">Difficulty Level *</label>
+                    <select id="guide-difficulty" required>
+                        <option value="">Select difficulty</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Expert">Expert</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="guide-estimated-time">Estimated Time</label>
+                    <input type="text" id="guide-estimated-time" placeholder="e.g., 15 minutes, 2 hours">
+                </div>
+                <div class="form-group">
+                    <label for="guide-tags">Tags</label>
+                    <input type="text" id="guide-tags" placeholder="Enter tags separated by commas">
+                </div>
+                <div class="form-group">
+                    <label for="guide-thumbnail">Thumbnail URL</label>
+                    <input type="url" id="guide-thumbnail" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="form-group">
                     <label for="guide-content">Content *</label>
                     <textarea id="guide-content" required placeholder="Write your guide content here..."></textarea>
                 </div>
@@ -614,6 +675,23 @@
             loadGuides();
         }
 
+        // Check if we need to open edit modal from URL parameter
+        function checkEditMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('edit');
+            if (editId) {
+                // Wait a bit for guides to load, then open edit modal
+                setTimeout(() => {
+                    editGuide(editId);
+                    // Clean up URL
+                    window.history.replaceState({}, document.title, 'guides.html');
+                }, 500);
+            }
+        }
+
+        // Call checkEditMode after page loads
+        window.addEventListener('DOMContentLoaded', checkEditMode);
+
         // Load guides from Firestore or localStorage
         async function loadGuides() {
             const loading = document.getElementById('loading');
@@ -670,6 +748,15 @@
             const card = document.createElement('div');
             card.className = 'guide-card';
             
+            // Make card clickable to navigate to guide detail page
+            card.addEventListener('click', (e) => {
+                // Don't navigate if clicking on action buttons
+                if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                    return;
+                }
+                window.location.href = `guide.html?id=${id}`;
+            });
+            
             let date;
             if (useLocalStorage) {
                 date = new Date(guide.createdAt).toLocaleDateString();
@@ -677,11 +764,24 @@
                 date = guide.createdAt ? new Date(guide.createdAt.toDate()).toLocaleDateString() : 'Unknown date';
             }
             
+            // Build metadata badges
+            let metadataHTML = '<div class="metadata">';
+            if (guide.game) {
+                metadataHTML += `<span class="badge">🎮 ${escapeHtml(guide.game)}</span>`;
+            }
+            if (guide.category) {
+                metadataHTML += `<span class="badge">📁 ${escapeHtml(guide.category)}</span>`;
+            }
+            if (guide.difficulty) {
+                metadataHTML += `<span class="badge">⚡ ${escapeHtml(guide.difficulty)}</span>`;
+            }
+            metadataHTML += '</div>';
+            
             card.innerHTML = `
                 <h3>${escapeHtml(guide.title)}</h3>
                 <div class="author">By ${escapeHtml(guide.authorName)}</div>
                 <div class="date">${escapeHtml(date)}</div>
-                <div class="content">${escapeHtml(guide.content)}</div>
+                ${guide.game || guide.category || guide.difficulty ? metadataHTML : ''}
             `;
 
             // Add admin actions if user is admin (or in demo mode)
@@ -692,12 +792,18 @@
                 const editBtn = document.createElement('button');
                 editBtn.className = 'btn btn-secondary';
                 editBtn.textContent = 'Edit';
-                editBtn.addEventListener('click', () => editGuide(id));
+                editBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    editGuide(id);
+                });
                 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'btn btn-danger';
                 deleteBtn.textContent = 'Delete';
-                deleteBtn.addEventListener('click', () => deleteGuide(id));
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteGuide(id);
+                });
                 
                 actions.appendChild(editBtn);
                 actions.appendChild(deleteBtn);
@@ -717,6 +823,12 @@
             currentEditingId = null;
             document.getElementById('modal-title').textContent = 'Create New Guide';
             document.getElementById('guide-title').value = '';
+            document.getElementById('guide-game').value = '';
+            document.getElementById('guide-category').value = '';
+            document.getElementById('guide-difficulty').value = '';
+            document.getElementById('guide-estimated-time').value = '';
+            document.getElementById('guide-tags').value = '';
+            document.getElementById('guide-thumbnail').value = '';
             document.getElementById('guide-content').value = '';
             document.getElementById('guide-modal').classList.add('active');
         }
@@ -740,6 +852,12 @@
                     currentEditingId = id;
                     document.getElementById('modal-title').textContent = 'Edit Guide';
                     document.getElementById('guide-title').value = guide.title;
+                    document.getElementById('guide-game').value = guide.game || '';
+                    document.getElementById('guide-category').value = guide.category || '';
+                    document.getElementById('guide-difficulty').value = guide.difficulty || '';
+                    document.getElementById('guide-estimated-time').value = guide.estimatedTime || '';
+                    document.getElementById('guide-tags').value = guide.tags ? guide.tags.join(', ') : '';
+                    document.getElementById('guide-thumbnail').value = guide.thumbnailUrl || '';
                     document.getElementById('guide-content').value = guide.content;
                     document.getElementById('guide-modal').classList.add('active');
                 } else {
@@ -753,6 +871,12 @@
                     currentEditingId = id;
                     document.getElementById('modal-title').textContent = 'Edit Guide';
                     document.getElementById('guide-title').value = guide.title;
+                    document.getElementById('guide-game').value = guide.game || '';
+                    document.getElementById('guide-category').value = guide.category || '';
+                    document.getElementById('guide-difficulty').value = guide.difficulty || '';
+                    document.getElementById('guide-estimated-time').value = guide.estimatedTime || '';
+                    document.getElementById('guide-tags').value = guide.tags ? guide.tags.join(', ') : '';
+                    document.getElementById('guide-thumbnail').value = guide.thumbnailUrl || '';
                     document.getElementById('guide-content').value = guide.content;
                     document.getElementById('guide-modal').classList.add('active');
                 }
@@ -805,12 +929,21 @@
             }
 
             const title = document.getElementById('guide-title').value.trim();
+            const game = document.getElementById('guide-game').value.trim();
+            const category = document.getElementById('guide-category').value.trim();
+            const difficulty = document.getElementById('guide-difficulty').value.trim();
+            const estimatedTime = document.getElementById('guide-estimated-time').value.trim();
+            const tagsInput = document.getElementById('guide-tags').value.trim();
+            const thumbnailUrl = document.getElementById('guide-thumbnail').value.trim();
             const content = document.getElementById('guide-content').value.trim();
 
-            if (!title || !content) {
-                alert('Please fill in all fields');
+            if (!title || !game || !category || !difficulty || !content) {
+                alert('Please fill in all required fields');
                 return;
             }
+
+            // Parse tags from comma-separated input
+            const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
 
             try {
                 if (useLocalStorage) {
@@ -824,6 +957,12 @@
                             guides[index] = {
                                 ...guides[index],
                                 title,
+                                game,
+                                category,
+                                difficulty,
+                                estimatedTime,
+                                tags,
+                                thumbnailUrl,
                                 content,
                                 updatedAt: new Date().toISOString()
                             };
@@ -833,6 +972,12 @@
                         const newGuide = {
                             id: 'guide_' + Date.now(),
                             title,
+                            game,
+                            category,
+                            difficulty,
+                            estimatedTime,
+                            tags,
+                            thumbnailUrl,
                             content,
                             authorEmail: 'demo@example.com',
                             authorName: 'Demo User',
@@ -859,6 +1004,12 @@
 
                     const guideData = {
                         title,
+                        game,
+                        category,
+                        difficulty,
+                        estimatedTime,
+                        tags,
+                        thumbnailUrl,
                         content,
                         authorEmail: user.email,
                         authorName: user.displayName || user.email,
