@@ -546,7 +546,7 @@
         const themeToggle = document.getElementById('theme-toggle');
         if (themeToggle) {
             // Initialize toggle state based on saved theme
-            const savedTheme = localStorage.getItem('theme') || 'light';
+            const savedTheme = window.themeManager.getSaved();
             if (savedTheme === 'dark') {
                 themeToggle.classList.add('active');
             }
@@ -776,8 +776,10 @@
                                 // Update the displayed name immediately
                                 document.getElementById('profile-name').textContent = newDisplayName;
                                 
-                                // Update auth button if it exists
-                                updateUIForAuth(user);
+                                // Trigger auth UI update to refresh the button
+                                if (typeof updateUIForAuth === 'function') {
+                                    updateUIForAuth(user);
+                                }
                                 
                                 alert('Settings saved successfully!');
                             } else {
