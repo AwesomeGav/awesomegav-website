@@ -1,0 +1,22 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Profile pictures
+    match /profile-pictures/{userId}/{fileName} {
+      // Allow authenticated users to read all profile pictures
+      // This enables community features while preventing public scraping
+      allow read: if request.auth != null;
+      
+      // Allow users to upload their own profile pictures
+      allow write: if request.auth != null && 
+                      request.auth.uid == userId &&
+                      // File size limit: 5MB
+                      request.resource.size < 5 * 1024 * 1024 &&
+                      // Only allow image files
+                      request.resource.contentType.matches('image/(jpeg|png|gif|webp)');
+      
+      // Allow users to delete their own profile pictures
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
