@@ -12,7 +12,7 @@ service firebase.storage {
                       // File size limit: 5MB
                       request.resource.size < 5 * 1024 * 1024 &&
                       // Only allow image files
-                      request.resource.contentType.matches('image/(jpeg|jpg|png|gif|webp)');
+                      request.resource.contentType.matches('image/(jpeg|png|gif|webp)');
       
       // Allow users to delete their own profile pictures
       allow delete: if request.auth != null && request.auth.uid == userId;

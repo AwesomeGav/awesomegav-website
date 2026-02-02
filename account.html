@@ -479,7 +479,7 @@
 
                         <div class="setting-item">
                             <label for="profile-picture">Profile Picture</label>
-                            <input type="file" id="profile-picture" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" style="display: none;">
+                            <input type="file" id="profile-picture" accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
                             <button class="btn btn-primary" id="upload-picture-btn" style="margin-top: 0.5rem;">
                                 📷 Upload New Picture
                             </button>
@@ -673,7 +673,7 @@
                         if (!file) return;
                         
                         // Validate file type
-                        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
                         if (!validTypes.includes(file.type)) {
                             alert('Invalid file type. Please upload a JPEG, PNG, GIF, or WebP image.');
                             return;
@@ -747,7 +747,7 @@
                                 // Save Discord info to Firestore
                                 await db.collection('users').doc(user.uid).set({
                                     discordId: discordUser.id,
-                                    discordUsername: `${discordUser.username}#${discordUser.discriminator}`,
+                                    discordUsername: discordUser.username,
                                     discordAvatar: discordUser.avatar,
                                     displayName: document.getElementById('display-name').value || user.displayName || 'User',
                                     email: user.email,
@@ -755,7 +755,7 @@
                                 }, { merge: true });
                                 
                                 // Update UI
-                                discordInfo.innerHTML = `✅ Linked to: <strong>${escapeHtml(discordUser.username)}#${escapeHtml(discordUser.discriminator)}</strong>`;
+                                discordInfo.innerHTML = `✅ Linked to: <strong>${escapeHtml(discordUser.username)}</strong>`;
                                 linkDiscordBtn.textContent = '🔄 Relink Discord Account';
                                 
                                 alert('Discord account linked successfully!');
