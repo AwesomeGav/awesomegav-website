@@ -535,7 +535,7 @@
     <section class="guides-section">
         <div class="container">
             <div id="admin-controls" class="admin-controls">
-                <a href="create-guide.html" id="create-guide-btn" class="btn btn-primary">✍️ Create New Guide</a>
+                <a href="/create-guide" id="create-guide-btn" class="btn btn-primary">✍️ Create New Guide</a>
             </div>
 
             <div id="loading" class="loading">Loading guides...</div>
@@ -674,7 +674,7 @@
                 setTimeout(() => {
                     editGuide(editId);
                     // Clean up URL
-                    window.history.replaceState({}, document.title, 'guides.html');
+                    window.history.replaceState({}, document.title, '/guides');
                 }, 500);
             }
         }
@@ -744,7 +744,7 @@
                 if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
                     return;
                 }
-                window.location.href = `guide.html?id=${id}`;
+                window.location.href = `/guide?id=${id}`;
             });
             
             let date;
