@@ -431,12 +431,12 @@
                     <span></span>
                     <span></span>
                 </button>
-                <li><a href="index">Home</a></li>
-                <li><a href="videos">Videos</a></li>
-                <li><a href="games">Games</a></li>
-                <li><a href="guides">Guides</a></li>
-                <li><a href="index#about">About</a></li>
-                <li><a href="index#contact">Contact</a></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/videos">Videos</a></li>
+                <li><a href="/games">Games</a></li>
+                <li><a href="/guides">Guides</a></li>
+                <li><a href="/#about">About</a></li>
+                <li><a href="/#contact">Contact</a></li>
                 <li><button id="auth-button">🔐 Sign In</button></li>
             </ul>
         </nav>
@@ -505,7 +505,7 @@
                 <div class="profile-section" style="text-align: center;">
                     <h2 style="margin-bottom: 1rem;">You are not signed in</h2>
                     <p style="color: #666; margin-bottom: 2rem;">Please sign in to view your account settings.</p>
-                    <button class="btn btn-primary" onclick="window.location.href='index'">Go to Home</button>
+                    <button class="btn btn-primary" onclick="window.location.href='/'">Go to Home</button>
                 </div>
             </div>
         </div>
@@ -605,7 +605,7 @@
                     signOutBtn.addEventListener('click', async () => {
                         try {
                             await firebase.auth().signOut();
-                            window.location.href = 'index';
+                            window.location.href = '/';
                         } catch (error) {
                             console.error('Sign-out error:', error);
                         }
