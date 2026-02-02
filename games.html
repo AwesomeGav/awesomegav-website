@@ -176,17 +176,7 @@
             transition: all 0.3s ease;
         }
 
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(8px, 8px);
-        }
 
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
 
         /* Close button inside mobile menu */
         .nav-close {
@@ -388,14 +378,12 @@
     const navClose = document.getElementById('nav-close');
 
     hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('active');
         navLinks.classList.toggle('active');
     });
 
     // Close button click handler
     if (navClose) {
         navClose.addEventListener('click', () => {
-            hamburger.classList.remove('active');
             navLinks.classList.remove('active');
         });
     }
@@ -403,7 +391,6 @@
     // Close menu when clicking on a link
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
             navLinks.classList.remove('active');
         });
     });
@@ -411,7 +398,6 @@
     // Close menu when clicking outside
     document.addEventListener('click', (e) => {
         if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
-            hamburger.classList.remove('active');
             navLinks.classList.remove('active');
         }
     });

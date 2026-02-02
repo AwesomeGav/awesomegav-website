@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Guide - AwesomeGav Gaming Channel</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header/Navigation */
+        header {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.03);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #333333;
+            padding: 5px;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #333333;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e0e0e0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        #auth-button {
+            background: #e0e0e0;
+            border: none;
+            padding: 0.4rem 0.9rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #333333;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+            height: 36px;
+            min-width: 100px;
+        }
+
+        #auth-button:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 3px;
+            background: #333333;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-close {
+            display: none;
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            z-index: 1002;
+        }
+
+        .nav-close span {
+            display: block;
+            width: 28px;
+            height: 3px;
+            background: #333333;
+            border-radius: 3px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .nav-close span:nth-child(1) {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .nav-close span:nth-child(2) {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #333333;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        /* Guide Form Section */
+        .guide-form-section {
+            padding: 2rem 0 6rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 2rem;
+            padding: 0.6rem 1.5rem;
+            background: #f5f5f5;
+            color: #333333;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .form-container {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f0f0f0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #333333;
+        }
+
+        .form-group textarea {
+            min-height: 300px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #e0e0e0;
+            color: #333333;
+        }
+
+        .btn-primary:hover {
+            background: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .access-denied {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .access-denied h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #ff5555;
+        }
+
+        footer {
+            background: #f5f5f5;
+            color: #333333;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+                z-index: 1001;
+            }
+
+            .nav-close {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: #ffffff;
+                flex-direction: column;
+                padding: 2rem;
+                padding-top: 5rem;
+                gap: 1.5rem;
+                box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+                transition: right 0.3s ease;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links li {
+                width: 100%;
+            }
+
+            .nav-links a, #auth-button {
+                font-size: 1.1rem;
+            }
+
+            .logo-text {
+                font-size: 1.5rem;
+            }
+
+            .logo img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .form-container {
+                padding: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <img src="logo.jpg" alt="AwesomeGav Logo" onerror="this.style.display='none'">
+                <span class="logo-text">AwesomeGav</span>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="nav-links" id="nav-links">
+                <button class="nav-close" id="nav-close" aria-label="Close menu">
+                    <span></span>
+                    <span></span>
+                </button>
+                <li><a href="index">Home</a></li>
+                <li><a href="videos">Videos</a></li>
+                <li><a href="games">Games</a></li>
+                <li><a href="guides">Guides</a></li>
+                <li><button id="auth-button">🔐 Sign In</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Create New Guide</h1>
+            <p>Share your gaming knowledge with the community</p>
+        </div>
+    </section>
+
+    <section class="guide-form-section">
+        <div class="container">
+            <a href="guides.html" class="back-button">← Back to Guides</a>
+            
+            <div id="access-denied" class="access-denied" style="display: none;">
+                <h2>Access Denied</h2>
+                <p>Only admin users can create guides.</p>
+                <a href="guides.html" class="btn btn-primary" style="margin-top: 1rem;">Back to Guides</a>
+            </div>
+
+            <div id="form-container" class="form-container" style="display: none;">
+                <form id="guide-form">
+                    <div class="form-group">
+                        <label for="guide-title">Title *</label>
+                        <input type="text" id="guide-title" required placeholder="Enter guide title">
+                    </div>
+                    <div class="form-group">
+                        <label for="guide-game">Game *</label>
+                        <input type="text" id="guide-game" required placeholder="Which game is this guide for?">
+                    </div>
+                    <div class="form-group">
+                        <label for="guide-category">Category *</label>
+                        <select id="guide-category" required>
+                            <option value="">Select a category</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Tips & Tricks">Tips & Tricks</option>
+                            <option value="Walkthrough">Walkthrough</option>
+                            <option value="Strategy">Strategy</option>
+                            <option value="Tutorial">Tutorial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="guide-difficulty">Difficulty Level *</label>
+                        <select id="guide-difficulty" required>
+                            <option value="">Select difficulty</option>
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                            <option value="Expert">Expert</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="guide-estimated-time">Estimated Time</label>
+                        <input type="text" id="guide-estimated-time" placeholder="e.g., 15 minutes, 2 hours">
+                    </div>
+                    <div class="form-group">
+                        <label for="guide-tags">Tags</label>
+                        <input type="text" id="guide-tags" placeholder="Enter tags separated by commas">
+                    </div>
+                    <div class="form-group">
+                        <label for="guide-thumbnail">Thumbnail URL</label>
+                        <input type="url" id="guide-thumbnail" placeholder="https://example.com/image.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label for="guide-content">Content *</label>
+                        <textarea id="guide-content" required placeholder="Write your guide content here..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <a href="guides.html" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save Guide</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 AwesomeGav Gaming Channel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    <script src="auth.js"></script>
+
+    <script>
+        let db = null;
+        let useLocalStorage = false;
+        let firebaseInitialized = false;
+
+        // Try to initialize Firebase
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            firebaseInitialized = true;
+            
+            // Initialize auth
+            initAuth();
+
+            // Listen for auth state changes
+            firebase.auth().onAuthStateChanged((user) => {
+                checkAccess(user);
+            });
+        } catch (error) {
+            console.warn('Firebase not configured, using localStorage fallback:', error);
+            useLocalStorage = true;
+            checkAccess(null);
+        }
+
+        // Check if user has access to create guides
+        function checkAccess(user) {
+            const accessDenied = document.getElementById('access-denied');
+            const formContainer = document.getElementById('form-container');
+
+            if (useLocalStorage) {
+                // In demo mode, allow access
+                formContainer.style.display = 'block';
+                accessDenied.style.display = 'none';
+            } else if (user && isAdmin()) {
+                // Admin user has access
+                formContainer.style.display = 'block';
+                accessDenied.style.display = 'none';
+            } else {
+                // No access
+                formContainer.style.display = 'none';
+                accessDenied.style.display = 'block';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('guide-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!useLocalStorage && !isAdmin()) {
+                alert('Only admins can create guides');
+                return;
+            }
+
+            const title = document.getElementById('guide-title').value.trim();
+            const game = document.getElementById('guide-game').value.trim();
+            const category = document.getElementById('guide-category').value;
+            const difficulty = document.getElementById('guide-difficulty').value;
+            const estimatedTime = document.getElementById('guide-estimated-time').value.trim();
+            const tagsInput = document.getElementById('guide-tags').value.trim();
+            const thumbnailUrl = document.getElementById('guide-thumbnail').value.trim();
+            const content = document.getElementById('guide-content').value.trim();
+
+            if (!title || !game || !category || !difficulty || !content) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()).filter(tag => tag) : [];
+
+            const guide = {
+                title,
+                game,
+                category,
+                difficulty,
+                estimatedTime: estimatedTime || '',
+                tags,
+                thumbnailUrl: thumbnailUrl || '',
+                content,
+                createdAt: useLocalStorage ? new Date().toISOString() : firebase.firestore.FieldValue.serverTimestamp(),
+                authorName: useLocalStorage ? 'Demo Admin' : (firebase.auth().currentUser.displayName || firebase.auth().currentUser.email),
+                authorEmail: useLocalStorage ? 'demo@example.com' : firebase.auth().currentUser.email
+            };
+
+            try {
+                if (useLocalStorage) {
+                    // Save to localStorage
+                    const guides = JSON.parse(localStorage.getItem('guides') || '[]');
+                    guide.id = Date.now().toString();
+                    guides.push(guide);
+                    localStorage.setItem('guides', JSON.stringify(guides));
+                    alert('Guide created successfully!');
+                    window.location.href = 'guides.html';
+                } else {
+                    // Save to Firestore
+                    await db.collection('guides').add(guide);
+                    alert('Guide created successfully!');
+                    window.location.href = 'guides.html';
+                }
+            } catch (error) {
+                console.error('Error creating guide:', error);
+                alert('Failed to create guide. Error: ' + (error.message || 'Unknown error'));
+            }
+        });
+
+        // Hamburger menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+        const navClose = document.getElementById('nav-close');
+
+        if (hamburger && navLinks) {
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            if (navClose) {
+                navClose.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            }
+
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

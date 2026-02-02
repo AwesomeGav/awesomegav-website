@@ -388,17 +388,7 @@
             transition: all 0.3s ease;
         }
 
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(8px, 8px);
-        }
 
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(7px, -7px);
-        }
 
         /* Close button inside mobile menu */
         .nav-close {
@@ -545,7 +535,7 @@
     <section class="guides-section">
         <div class="container">
             <div id="admin-controls" class="admin-controls">
-                <button id="create-guide-btn" class="btn btn-primary">✍️ Create New Guide</button>
+                <a href="create-guide.html" id="create-guide-btn" class="btn btn-primary">✍️ Create New Guide</a>
             </div>
 
             <div id="loading" class="loading">Loading guides...</div>
@@ -813,26 +803,6 @@
             return card;
         }
 
-        // Open create modal
-        function openCreateModal() {
-            if (!useLocalStorage && !isAdmin()) {
-                alert('Only admins can create guides');
-                return;
-            }
-
-            currentEditingId = null;
-            document.getElementById('modal-title').textContent = 'Create New Guide';
-            document.getElementById('guide-title').value = '';
-            document.getElementById('guide-game').value = '';
-            document.getElementById('guide-category').value = '';
-            document.getElementById('guide-difficulty').value = '';
-            document.getElementById('guide-estimated-time').value = '';
-            document.getElementById('guide-tags').value = '';
-            document.getElementById('guide-thumbnail').value = '';
-            document.getElementById('guide-content').value = '';
-            document.getElementById('guide-modal').classList.add('active');
-        }
-
         // Edit guide
         async function editGuide(id) {
             if (!useLocalStorage && !isAdmin()) {
@@ -1053,7 +1023,6 @@
         }
 
         // Event listeners for buttons
-        document.getElementById('create-guide-btn').addEventListener('click', openCreateModal);
         document.getElementById('cancel-btn').addEventListener('click', closeModal);
 
         // Close modal when clicking outside
@@ -1070,14 +1039,12 @@
 
         if (hamburger && navLinks) {
             hamburger.addEventListener('click', () => {
-                hamburger.classList.toggle('active');
                 navLinks.classList.toggle('active');
             });
 
             // Close button click handler
             if (navClose) {
                 navClose.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
                 });
             }
@@ -1085,7 +1052,6 @@
             // Close menu when clicking on a link
             navLinks.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
-                    hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
                 });
             });
@@ -1093,7 +1059,6 @@
             // Close menu when clicking outside
             document.addEventListener('click', (e) => {
                 if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
-                    hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
                 }
             });
