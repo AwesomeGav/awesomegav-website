@@ -471,19 +471,19 @@
                         
                         <div class="setting-item">
                             <label for="display-name">Display Name</label>
-                            <input type="text" id="display-name" placeholder="Your display name" maxlength="50">
-                            <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+                            <input type="text" id="display-name" placeholder="Your display name" maxlength="50" aria-describedby="display-name-hint">
+                            <p id="display-name-hint" style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
                                 <em>Maximum 50 characters</em>
                             </p>
                         </div>
 
                         <div class="setting-item">
                             <label for="profile-picture">Profile Picture</label>
-                            <input type="file" id="profile-picture" accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
+                            <input type="file" id="profile-picture" accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;" aria-label="Upload profile picture">
                             <button class="btn btn-primary" id="upload-picture-btn" style="margin-top: 0.5rem;">
                                 📷 Upload New Picture
                             </button>
-                            <p style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
+                            <p id="profile-picture-hint" style="margin-top: 0.5rem; color: #666; font-size: 0.9rem;">
                                 <em>Supported: JPEG, PNG, GIF, WebP (max 5MB)</em>
                             </p>
                         </div>
