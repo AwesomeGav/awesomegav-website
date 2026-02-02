@@ -612,6 +612,23 @@
     <script src="auth.js"></script>
 
     <script>
+        // Helper function to escape HTML and prevent XSS
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+        
+        // Helper function to get display name with consistent fallback
+        function getDisplayName(userProfile, authUser) {
+            return userProfile?.displayName || authUser?.displayName || 'User';
+        }
+        
         // Initialize Firebase Auth for account page
         try {
             firebase.initializeApp(firebaseConfig);
@@ -620,6 +637,184 @@
             const db = firebase.firestore();
             const storage = firebase.storage();
             
+            let currentUser = null;
+            let eventListenersInitialized = false;
+            
+            // Setup event listeners once
+            function setupEventListeners(user) {
+                if (eventListenersInitialized) return;
+                eventListenersInitialized = true;
+                
+                // Profile picture upload handler
+                const profilePictureInput = document.getElementById('profile-picture');
+                profilePictureInput.addEventListener('change', async (e) => {
+                    const file = e.target.files[0];
+                    if (!file || !currentUser) return;
+                    
+                    // Validate file type
+                    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+                    if (!validTypes.includes(file.type)) {
+                        alert('Invalid file type. Please upload a JPEG, PNG, GIF, or WebP image.');
+                        return;
+                    }
+                    
+                    // Validate file size (5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert('File too large. Maximum size is 5MB.');
+                        return;
+                    }
+                    
+                    try {
+                        // Upload to Firebase Storage
+                        const timestamp = Date.now();
+                        const fileName = `${timestamp}_${file.name}`;
+                        const storageRef = storage.ref(`profile-pictures/${currentUser.uid}/${fileName}`);
+                        
+                        // Show upload progress
+                        const uploadTask = storageRef.put(file);
+                        
+                        uploadTask.on('state_changed',
+                            (snapshot) => {
+                                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                                console.log('Upload is ' + progress + '% done');
+                            },
+                            (error) => {
+                                console.error('Upload error:', error);
+                                alert('Failed to upload profile picture. Please try again.');
+                            },
+                            async () => {
+                                // Upload completed successfully
+                                const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
+                                
+                                const currentDisplayName = document.getElementById('display-name').value || 
+                                                         currentUser.displayName || 'User';
+                                
+                                // Update user profile in Firestore
+                                await db.collection('users').doc(currentUser.uid).set({
+                                    photoURL: downloadURL,
+                                    displayName: currentDisplayName,
+                                    email: currentUser.email,
+                                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                }, { merge: true });
+                                
+                                // Update Firebase Auth profile
+                                await currentUser.updateProfile({
+                                    photoURL: downloadURL
+                                });
+                                
+                                // Update UI
+                                document.getElementById('profile-image').src = downloadURL;
+                                alert('Profile picture updated successfully!');
+                            }
+                        );
+                    } catch (error) {
+                        console.error('Error uploading profile picture:', error);
+                        alert('Failed to upload profile picture. Please try again.');
+                    }
+                });
+                
+                // Discord linking handler
+                const linkDiscordBtn = document.getElementById('link-discord-btn');
+                linkDiscordBtn.addEventListener('click', async () => {
+                    if (!currentUser) return;
+                    
+                    try {
+                        const provider = new firebase.auth.OAuthProvider('oidc.discord');
+                        
+                        // Link Discord account
+                        const result = await currentUser.linkWithPopup(provider);
+                        
+                        // Get Discord user info from the credential
+                        const credential = result.credential;
+                        const discordUser = result.additionalUserInfo?.profile;
+                        
+                        if (discordUser) {
+                            const currentDisplayName = document.getElementById('display-name').value || 
+                                                     currentUser.displayName || 'User';
+                            
+                            // Save Discord info to Firestore
+                            await db.collection('users').doc(currentUser.uid).set({
+                                discordId: discordUser.id,
+                                discordUsername: discordUser.username,
+                                discordAvatar: discordUser.avatar,
+                                displayName: currentDisplayName,
+                                email: currentUser.email,
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            }, { merge: true });
+                            
+                            // Update UI
+                            const discordInfo = document.getElementById('discord-info');
+                            discordInfo.innerHTML = `✅ Linked to: <strong>${escapeHtml(discordUser.username)}</strong>`;
+                            linkDiscordBtn.textContent = '🔄 Relink Discord Account';
+                            
+                            alert('Discord account linked successfully!');
+                        }
+                    } catch (error) {
+                        console.error('Discord linking error:', error);
+                        
+                        if (error.code === 'auth/credential-already-in-use') {
+                            alert('This Discord account is already linked to another user.');
+                        } else if (error.code === 'auth/popup-closed-by-user') {
+                            // User closed the popup, do nothing
+                        } else {
+                            alert('Failed to link Discord account. Please ensure Discord OAuth is configured in Firebase Console.');
+                        }
+                    }
+                });
+                
+                // Save settings handler
+                const saveButton = document.getElementById('save-settings');
+                saveButton.addEventListener('click', async () => {
+                    if (!currentUser) return;
+                    
+                    const newDisplayName = document.getElementById('display-name').value.trim();
+                    
+                    // Validate display name
+                    if (!newDisplayName) {
+                        alert('Display name cannot be empty.');
+                        return;
+                    }
+                    
+                    if (newDisplayName.length > 50) {
+                        alert('Display name must be 50 characters or less.');
+                        return;
+                    }
+                    
+                    try {
+                        // Update Firestore
+                        await db.collection('users').doc(currentUser.uid).set({
+                            displayName: newDisplayName,
+                            email: currentUser.email,
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        }, { merge: true });
+                        
+                        // Update Firebase Auth profile
+                        await currentUser.updateProfile({
+                            displayName: newDisplayName
+                        });
+                        
+                        // Update UI
+                        document.getElementById('profile-name').textContent = newDisplayName;
+                        
+                        alert('Settings saved successfully!');
+                    } catch (error) {
+                        console.error('Error saving settings:', error);
+                        alert('Failed to save settings. Please try again.');
+                    }
+                });
+                
+                // Sign out button
+                const signOutBtn = document.getElementById('sign-out-btn');
+                signOutBtn.addEventListener('click', async () => {
+                    try {
+                        await firebase.auth().signOut();
+                        window.location.href = '/';
+                    } catch (error) {
+                        console.error('Sign-out error:', error);
+                    }
+                });
+            }
+            
             // Wait for auth state
             firebase.auth().onAuthStateChanged(async (user) => {
                 const loading = document.getElementById('loading');
@@ -627,11 +822,15 @@
                 const notSignedIn = document.getElementById('not-signed-in');
                 
                 loading.style.display = 'none';
+                currentUser = user;
                 
                 if (user) {
                     // User is signed in, show account data
                     accountData.style.display = 'block';
                     notSignedIn.style.display = 'none';
+                    
+                    // Setup event listeners once
+                    setupEventListeners(user);
                     
                     // Load user profile from Firestore
                     let userProfile = null;
@@ -643,11 +842,12 @@
                         }
                     } catch (error) {
                         console.error('Error loading user profile:', error);
+                        alert('Warning: Could not load your profile data. Some features may not work correctly.');
                     }
                     
                     // Populate profile data
                     const profileImage = userProfile?.photoURL || user.photoURL || 'logo.jpg';
-                    const displayName = userProfile?.displayName || user.displayName || 'User';
+                    const displayName = getDisplayName(userProfile, user);
                     
                     document.getElementById('profile-image').src = profileImage;
                     document.getElementById('profile-name').textContent = displayName;
@@ -665,185 +865,17 @@
                         discordInfo.textContent = 'Not linked';
                         linkDiscordBtn.textContent = '🎮 Link Discord Account';
                     }
-                    
-                    // Profile picture upload handler
-                    const profilePictureInput = document.getElementById('profile-picture');
-                    profilePictureInput.addEventListener('change', async (e) => {
-                        const file = e.target.files[0];
-                        if (!file) return;
-                        
-                        // Validate file type
-                        const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-                        if (!validTypes.includes(file.type)) {
-                            alert('Invalid file type. Please upload a JPEG, PNG, GIF, or WebP image.');
-                            return;
-                        }
-                        
-                        // Validate file size (5MB)
-                        if (file.size > 5 * 1024 * 1024) {
-                            alert('File too large. Maximum size is 5MB.');
-                            return;
-                        }
-                        
-                        try {
-                            // Upload to Firebase Storage
-                            const timestamp = Date.now();
-                            const fileName = `${timestamp}_${file.name}`;
-                            const storageRef = storage.ref(`profile-pictures/${user.uid}/${fileName}`);
-                            
-                            // Show upload progress
-                            const uploadTask = storageRef.put(file);
-                            
-                            uploadTask.on('state_changed',
-                                (snapshot) => {
-                                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                                    console.log('Upload is ' + progress + '% done');
-                                },
-                                (error) => {
-                                    console.error('Upload error:', error);
-                                    alert('Failed to upload profile picture. Please try again.');
-                                },
-                                async () => {
-                                    // Upload completed successfully
-                                    const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-                                    
-                                    // Update user profile in Firestore
-                                    await db.collection('users').doc(user.uid).set({
-                                        photoURL: downloadURL,
-                                        displayName: document.getElementById('display-name').value || user.displayName || 'User',
-                                        email: user.email,
-                                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                                    }, { merge: true });
-                                    
-                                    // Update Firebase Auth profile
-                                    await user.updateProfile({
-                                        photoURL: downloadURL
-                                    });
-                                    
-                                    // Update UI
-                                    document.getElementById('profile-image').src = downloadURL;
-                                    alert('Profile picture updated successfully!');
-                                }
-                            );
-                        } catch (error) {
-                            console.error('Error uploading profile picture:', error);
-                            alert('Failed to upload profile picture. Please try again.');
-                        }
-                    });
-                    
-                    // Discord linking handler
-                    linkDiscordBtn.addEventListener('click', async () => {
-                        try {
-                            const provider = new firebase.auth.OAuthProvider('oidc.discord');
-                            
-                            // Link Discord account
-                            const result = await user.linkWithPopup(provider);
-                            
-                            // Get Discord user info from the credential
-                            const credential = result.credential;
-                            const discordUser = result.additionalUserInfo?.profile;
-                            
-                            if (discordUser) {
-                                // Save Discord info to Firestore
-                                await db.collection('users').doc(user.uid).set({
-                                    discordId: discordUser.id,
-                                    discordUsername: discordUser.username,
-                                    discordAvatar: discordUser.avatar,
-                                    displayName: document.getElementById('display-name').value || user.displayName || 'User',
-                                    email: user.email,
-                                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                                }, { merge: true });
-                                
-                                // Update UI
-                                discordInfo.innerHTML = `✅ Linked to: <strong>${escapeHtml(discordUser.username)}</strong>`;
-                                linkDiscordBtn.textContent = '🔄 Relink Discord Account';
-                                
-                                alert('Discord account linked successfully!');
-                            }
-                        } catch (error) {
-                            console.error('Discord linking error:', error);
-                            
-                            if (error.code === 'auth/credential-already-in-use') {
-                                alert('This Discord account is already linked to another user.');
-                            } else if (error.code === 'auth/popup-closed-by-user') {
-                                // User closed the popup, do nothing
-                            } else {
-                                alert('Failed to link Discord account. Please ensure Discord OAuth is configured in Firebase Console.');
-                            }
-                        }
-                    });
-                    
-                    // Save settings handler
-                    const saveButton = document.getElementById('save-settings');
-                    saveButton.addEventListener('click', async () => {
-                        const newDisplayName = document.getElementById('display-name').value.trim();
-                        
-                        // Validate display name
-                        if (!newDisplayName) {
-                            alert('Display name cannot be empty.');
-                            return;
-                        }
-                        
-                        if (newDisplayName.length > 50) {
-                            alert('Display name must be 50 characters or less.');
-                            return;
-                        }
-                        
-                        try {
-                            // Update Firestore
-                            await db.collection('users').doc(user.uid).set({
-                                displayName: newDisplayName,
-                                email: user.email,
-                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                            }, { merge: true });
-                            
-                            // Update Firebase Auth profile
-                            await user.updateProfile({
-                                displayName: newDisplayName
-                            });
-                            
-                            // Update UI
-                            document.getElementById('profile-name').textContent = newDisplayName;
-                            
-                            alert('Settings saved successfully!');
-                        } catch (error) {
-                            console.error('Error saving settings:', error);
-                            alert('Failed to save settings. Please try again.');
-                        }
-                    });
-                    
-                    // Sign out button
-                    const signOutBtn = document.getElementById('sign-out-btn');
-                    signOutBtn.addEventListener('click', async () => {
-                        try {
-                            await firebase.auth().signOut();
-                            window.location.href = '/';
-                        } catch (error) {
-                            console.error('Sign-out error:', error);
-                        }
-                    });
                 } else {
                     // User is not signed in
                     accountData.style.display = 'none';
                     notSignedIn.style.display = 'block';
+                    eventListenersInitialized = false;
                 }
             });
         } catch (error) {
             console.warn('Firebase auth not configured:', error);
             document.getElementById('loading').style.display = 'none';
             document.getElementById('not-signed-in').style.display = 'block';
-        }
-        
-        // Helper function to escape HTML and prevent XSS
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, m => map[m]);
         }
     </script>
 </body>

@@ -111,7 +111,9 @@ python3 -m http.server 8000
 firebase serve
 ```
 
-Then open `http://localhost:8000/account.html` in your browser.
+Then test the features:
+- Open `http://localhost:8000/guides.html` to test the guides functionality
+- Open `http://localhost:8000/account.html` to test the account settings and new features
 
 ## Step 10: Deploy (Optional - if using Firebase Hosting)
 
