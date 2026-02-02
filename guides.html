@@ -535,7 +535,7 @@
     <section class="guides-section">
         <div class="container">
             <div id="admin-controls" class="admin-controls">
-                <button id="create-guide-btn" class="btn btn-primary">✍️ Create New Guide</button>
+                <a href="create-guide.html" id="create-guide-btn" class="btn btn-primary">✍️ Create New Guide</a>
             </div>
 
             <div id="loading" class="loading">Loading guides...</div>
@@ -1043,7 +1043,6 @@
         }
 
         // Event listeners for buttons
-        document.getElementById('create-guide-btn').addEventListener('click', openCreateModal);
         document.getElementById('cancel-btn').addEventListener('click', closeModal);
 
         // Close modal when clicking outside
