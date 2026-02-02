@@ -37,7 +37,7 @@ function updateUIForAuth(user) {
             <span>${user.displayName || user.email}</span>
         `;
         authBtn.addEventListener('click', () => {
-            window.location.href = 'account';
+            window.location.href = '/account';
         });
         
         if (userInfo) {
