@@ -10,5 +10,26 @@ service cloud.firestore {
       allow create, update, delete: if request.auth != null && 
                                        request.auth.token.email == 'zoomzamgamer@gmail.com';
     }
+    
+    // User profiles collection
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Users can create/update their own profile
+      allow create, update: if request.auth != null && 
+                              request.auth.uid == userId &&
+                              // Validate data structure
+                              request.resource.data.keys().hasAll(['displayName', 'email']) &&
+                              // Sanitize display name (max 50 chars, no special chars for XSS)
+                              request.resource.data.displayName is string &&
+                              request.resource.data.displayName.size() > 0 &&
+                              request.resource.data.displayName.size() <= 50 &&
+                              // Email must match auth email
+                              request.resource.data.email == request.auth.token.email;
+      
+      // Users cannot delete their own profile
+      allow delete: if false;
+    }
   }
 }
