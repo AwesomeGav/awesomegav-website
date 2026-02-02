@@ -803,26 +803,6 @@
             return card;
         }
 
-        // Open create modal
-        function openCreateModal() {
-            if (!useLocalStorage && !isAdmin()) {
-                alert('Only admins can create guides');
-                return;
-            }
-
-            currentEditingId = null;
-            document.getElementById('modal-title').textContent = 'Create New Guide';
-            document.getElementById('guide-title').value = '';
-            document.getElementById('guide-game').value = '';
-            document.getElementById('guide-category').value = '';
-            document.getElementById('guide-difficulty').value = '';
-            document.getElementById('guide-estimated-time').value = '';
-            document.getElementById('guide-tags').value = '';
-            document.getElementById('guide-thumbnail').value = '';
-            document.getElementById('guide-content').value = '';
-            document.getElementById('guide-modal').classList.add('active');
-        }
-
         // Edit guide
         async function editGuide(id) {
             if (!useLocalStorage && !isAdmin()) {
