@@ -24,7 +24,7 @@ This implementation adds Discord account linking and profile update functionalit
 - 5MB file size limit
 - Restricted to standard image MIME types (JPEG, PNG, GIF, WebP)
 - Users can only upload/delete their own images
-- Public read access for all profile pictures
+- Authenticated read access for all profile pictures (enables community features while preventing public scraping)
 
 ### 3. firebase.json
 **Purpose**: Firebase project configuration

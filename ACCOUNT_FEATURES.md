@@ -56,7 +56,8 @@ Users can upload a custom profile picture.
 
 #### Storage:
 - Images are stored in Firebase Storage at `/profile-pictures/{userId}/`
-- Each user can only access their own images
+- Authenticated users can view all profile pictures (for community features)
+- Only the owner can upload or delete their own images
 - Older images are retained (not automatically deleted)
 
 ### 3. Display Name Updates

@@ -3,7 +3,8 @@ service firebase.storage {
   match /b/{bucket}/o {
     // Profile pictures
     match /profile-pictures/{userId}/{fileName} {
-      // Allow authenticated users to read profile pictures
+      // Allow authenticated users to read all profile pictures
+      // This enables community features while preventing public scraping
       allow read: if request.auth != null;
       
       // Allow users to upload their own profile pictures
